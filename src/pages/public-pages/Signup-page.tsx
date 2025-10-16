@@ -102,6 +102,7 @@ const SignupPage = () => {
                 username: finalResponse.data.username,
                 userId: finalResponse.data.id,
                 wallet_amount: finalResponse.data.wallet_amount,
+                profile_pic: finalResponse.data.profile_pic,
             });
 
             if (role === "client") {

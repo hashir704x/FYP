@@ -6,6 +6,7 @@ export type UserType = {
     email: string;
     role: UserRoleType;
     wallet_amount: number;
+    profile_pic: string;
 };
 
 export type UserAuthStoreType = {
@@ -29,7 +30,17 @@ export type ProjectsFromBackendType = {
     project_title: string;
     project_description: string;
     project_budget: number;
-    project_status: "DRAFT" | "IN_PROGRESS" | "COMPLETED"; // example statuses
+    project_status: "DRAFT" | "IN_PROGRESS" | "COMPLETED";
     required_skills: string[];
-    created_at: string; // ISO date string
+    created_at: string;
+};
+
+export type ClientProfileFromBackendType = {
+    id: string;
+    username: string;
+    email: string;
+    role: string;
+    profile_pic: string;
+    wallet_amount: number;
+    created_at: string;
 };

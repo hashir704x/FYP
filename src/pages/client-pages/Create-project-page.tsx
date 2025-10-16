@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
 const CreateProjectPage = () => {
+    
     const user = userAuthStore((state) => state.user);
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
@@ -66,7 +67,7 @@ const CreateProjectPage = () => {
     }
 
     return (
-        <div className="min-h-screen border-2 border-red-400">
+        <div>
             <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
                 Create Project
             </h1>

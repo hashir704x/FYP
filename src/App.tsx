@@ -12,7 +12,7 @@ const AllProjectsPage = lazy(() => import("@/pages/client-pages/All-projects-pag
 const ProjectDetailsPage = lazy(
     () => import("@/pages/client-pages/Project-details-page")
 );
-
+const ClientProfilePage = lazy(() => import("@/pages/client-pages/Client-profile-page"));
 
 const router = createBrowserRouter([
     {
@@ -46,6 +46,10 @@ const router = createBrowserRouter([
             {
                 path: "project-details/:project-id",
                 element: <ProjectDetailsPage />,
+            },
+            {
+                path: "client-profile",
+                element: <ClientProfilePage />,
             },
         ],
     },
