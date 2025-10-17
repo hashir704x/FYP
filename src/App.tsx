@@ -18,6 +18,9 @@ const ProjectDetailsPage = lazy(
     () => import("@/pages/client-pages/Project-details-page")
 );
 const ClientProfilePage = lazy(() => import("@/pages/client-pages/Client-profile-page"));
+const ViewFreelancersPage = lazy(() => import("@/pages/client-pages/View-freelancers-page"));
+
+
 
 // Freelancer Pages
 const FreelancerLayout = lazy(() => import("@/layouts/Freelancer-layout"));
@@ -65,6 +68,10 @@ const router = createBrowserRouter([
                 path: "client-profile",
                 element: <ClientProfilePage />,
             },
+            {
+                path: "view-freelancers",
+                element: <ViewFreelancersPage />
+            }
         ],
     },
     {

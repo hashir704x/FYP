@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     getClientProfileData,
     updateClientProfileImage,
-} from "@/api-functions/client-profile-functions";
+} from "@/api-functions/client-functions";
 import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
 import { userAuthStore } from "@/store/user-auth-store";

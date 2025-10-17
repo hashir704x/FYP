@@ -63,7 +63,7 @@ const customStyles: StylesConfig<Option> = {
     }),
 };
 
-type TechPickerProps = {
+type SkillPickerProps = {
     value: string[];
     onChange: (newValue: string[]) => void;
 };
@@ -79,17 +79,17 @@ const options: Option[] = [
     { value: "Agentic Ai", label: "Agentic Ai" },
 ];
 
-export default function TechPicker({ value, onChange }: TechPickerProps) {
+export default function SkillsPicker({ value, onChange }: SkillPickerProps) {
     const selectedOptions = value.map((v) => ({ value: v, label: v }));
 
     return (
-        <div className="w-full max-w-sm">
+        <div className="w-full">
             <CreatableSelect
                 isMulti
                 isSearchable
                 options={options}
                 styles={customStyles}
-                placeholder="Select technologies..."
+                placeholder="Select Skills..."
                 value={selectedOptions}
                 onChange={(newValue) =>
                     onChange((newValue as Option[]).map((opt) => opt.value))

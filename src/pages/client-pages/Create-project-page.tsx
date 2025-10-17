@@ -1,4 +1,3 @@
-import TechPicker from "@/components/Tech-picker";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
@@ -8,14 +7,14 @@ import { createProject } from "@/api-functions/project-functions";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import SkillsPicker from "@/components/Skills-picker";
 
 const CreateProjectPage = () => {
-    
     const user = userAuthStore((state) => state.user);
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
     const [budget, setBudget] = useState<number>(0);
-    const [techs, setTechs] = useState<string[]>([]);
+    const [skills, setSkills] = useState<string[]>([]);
 
     const queryClient = useQueryClient();
 
@@ -28,7 +27,7 @@ const CreateProjectPage = () => {
             setTitle("");
             setDesc("");
             setBudget(0);
-            setTechs([]);
+            setSkills([]);
             queryClient.invalidateQueries({ queryKey: ["get-all-projects"] });
             navigate(`/client/project-details/${projectId}`);
         },
@@ -40,7 +39,7 @@ const CreateProjectPage = () => {
 
     function handleCreateProject(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (!title || !desc || techs.length === 0) {
+        if (!title || !desc || skills.length === 0) {
             toast.warning("Fields are empty");
             return;
         }
@@ -60,7 +59,7 @@ const CreateProjectPage = () => {
                 project_title: title,
                 project_description: desc,
                 project_budget: budget,
-                required_skills: techs,
+                required_skills: skills,
                 client_id: user.userId,
             });
         }
@@ -109,7 +108,7 @@ const CreateProjectPage = () => {
                         <label className="font-medium text-gray-700">
                             Required Technologies
                         </label>
-                        <TechPicker value={techs} onChange={setTechs} />
+                        <SkillsPicker value={skills} onChange={setSkills} />
                     </div>
 
                     <div className="flex flex-col space-y-2">

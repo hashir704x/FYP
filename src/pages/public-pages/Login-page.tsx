@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { supabaseClient } from "@/Supabase-client";
+import { Spinner } from "@/components/ui/spinner";
 
 const LoginPage = () => {
     const userExists = userAuthStore((state) => state.userExists);
@@ -16,6 +17,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState("");
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [password, setPassword] = useState("");
 
@@ -44,12 +46,15 @@ const LoginPage = () => {
             return;
         }
 
+        setLoading(true);
+
         const initialResponse = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password,
         });
 
         if (initialResponse.error) {
+            setLoading(false);
             toast.error(`Login failed, ${initialResponse.error.message}`);
             console.log("error message:", initialResponse.error.message);
             return;
@@ -64,6 +69,7 @@ const LoginPage = () => {
                 .single();
 
             if (middleResponse.error) {
+                setLoading(false);
                 toast.error(`Login failed, ${middleResponse.error.message}`);
                 console.log("error message:", middleResponse.error.message);
                 return;
@@ -87,6 +93,8 @@ const LoginPage = () => {
                 profile_pic: finalResponse.data.profile_pic,
             });
 
+            setLoading(false);
+
             if (finalResponse.data.role === "freelancer") {
                 navigate("/freelancer");
                 return;
@@ -95,6 +103,7 @@ const LoginPage = () => {
                 return;
             }
         } else {
+            setLoading(false);
             toast.error("Login failed, something went wrong!");
             return;
         }
@@ -151,10 +160,12 @@ const LoginPage = () => {
                     </div>
 
                     <Button
+                        disabled={loading}
                         onClick={handleLogin}
                         variant="custom"
                         className="mt-4 cursor-pointer"
                     >
+                        {loading && <Spinner />}
                         Login
                     </Button>
                 </form>

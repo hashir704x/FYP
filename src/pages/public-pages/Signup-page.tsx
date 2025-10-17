@@ -14,6 +14,8 @@ import type { UserRoleType } from "@/Types";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { supabaseClient } from "@/Supabase-client";
+import SkillsPicker from "@/components/Skills-picker";
+import { Spinner } from "@/components/ui/spinner";
 
 const SignupPage = () => {
     const userExists = userAuthStore((state) => state.userExists);
@@ -26,6 +28,9 @@ const SignupPage = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [skills, setSkills] = useState<string[]>([]);
+    const [description, setDescription] = useState("");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (userExists && user) {
@@ -38,6 +43,11 @@ const SignupPage = () => {
         e.preventDefault();
 
         if (!username || !email || !password || !role) {
+            toast.warning("Feilds are empty!");
+            return;
+        }
+
+        if (role === "freelancer" && (skills.length === 0 || !description)) {
             toast.warning("Feilds are empty!");
             return;
         }
@@ -57,12 +67,15 @@ const SignupPage = () => {
             return;
         }
 
+        setLoading(true);
+
         const initialResponse = await supabaseClient.auth.signUp({
             email: email,
             password: password,
         });
 
         if (initialResponse.error) {
+            setLoading(false);
             console.log("initial error");
             toast.error(`Signup failed, ${initialResponse.error.message}`);
             console.log("error message:", initialResponse.error.message);
@@ -78,49 +91,73 @@ const SignupPage = () => {
             });
 
             if (middleResponse.error) {
+                setLoading(false);
                 toast.error(`Signup failed, ${middleResponse.error.message}`);
                 console.log("error message:", middleResponse.error.message);
                 return;
             }
 
-            let tableName: "freelancers" | "clients" = "clients";
-            if (role === "freelancer") tableName = "freelancers";
-
-            const finalResponse = await supabaseClient
-                .from(tableName)
-                .insert({
-                    id: userId,
-                    username: username,
-                    email: email,
-                })
-                .select()
-                .single();
-
-            setUser({
-                email: finalResponse.data.email,
-                role: finalResponse.data.role,
-                username: finalResponse.data.username,
-                userId: finalResponse.data.id,
-                wallet_amount: finalResponse.data.wallet_amount,
-                profile_pic: finalResponse.data.profile_pic,
-            });
-
             if (role === "client") {
+                const finalResponse = await supabaseClient
+                    .from("clients")
+                    .insert({
+                        id: userId,
+                        username: username,
+                        email: email,
+                    })
+                    .select()
+                    .single();
+
+                setUser({
+                    email: finalResponse.data.email,
+                    role: finalResponse.data.role,
+                    username: finalResponse.data.username,
+                    userId: finalResponse.data.id,
+                    wallet_amount: finalResponse.data.wallet_amount,
+                    profile_pic: finalResponse.data.profile_pic,
+                });
+
+                toast.success("Account created successfully");
                 navigate("/client");
+                setLoading(false);
                 return;
             } else {
+                const finalResponse = await supabaseClient
+                    .from("freelancers")
+                    .insert({
+                        id: userId,
+                        username: username,
+                        email: email,
+                        skills: skills,
+                        description: description,
+                    })
+                    .select()
+                    .single();
+
+                setUser({
+                    email: finalResponse.data.email,
+                    role: finalResponse.data.role,
+                    username: finalResponse.data.username,
+                    userId: finalResponse.data.id,
+                    wallet_amount: finalResponse.data.wallet_amount,
+                    profile_pic: finalResponse.data.profile_pic,
+                });
+                
+                toast.success("Account created successfully");
                 navigate("/freelancer");
+                setLoading(false);
                 return;
             }
         } else {
             toast.error("Signup failed, something went wrong!");
+            setLoading(false);
             return;
         }
     }
 
     return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="border-2 xl:w-[400px] w-[350px] p-4 rounded-xl shadow-2xl">
+        <div className="flex items-center justify-center min-h-screen xl:p-3">
+            <div className="border-2 xl:w-[450px] w-[350px] p-4 rounded-xl shadow-2xl">
                 <div>
                     <h1 className="text-xl text-center sm:text-3xl font-medium">
                         Create an account
@@ -196,18 +233,39 @@ const SignupPage = () => {
                             </SelectContent>
                         </Select>
                     </div>
+
+                    {role && role === "freelancer" && (
+                        <div>
+                            <div>
+                                <label htmlFor="freelancer-desc" className="text-sm">
+                                    Description
+                                </label>
+                                <textarea
+                                    id="freelancer-desc"
+                                    rows={5}
+                                    placeholder="Describe your work or profession"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    className="mt-1 border border-gray-300 rounded-md px-3 py-2 outline-none resize-none w-full"
+                                />
+                            </div>
+
+                            <div>
+                                <p className="text-sm mb-1">Pick your skills</p>
+                                <SkillsPicker value={skills} onChange={setSkills} />
+                            </div>
+                        </div>
+                    )}
+
                     <Button
+                        disabled={loading}
                         onClick={handleSignup}
                         variant="custom"
                         className="mt-4 cursor-pointer"
                     >
+                        {loading && <Spinner />}
                         Create Account
                     </Button>
-                    {/* <div className="flex items-center gap-1">
-                        <hr className="w-full" />
-                        <span className="">or</span>{" "}
-                        <hr className="w-full" />
-                    </div> */}
                 </form>
             </div>
         </div>

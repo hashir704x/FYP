@@ -44,3 +44,13 @@ export type ClientProfileFromBackendType = {
     wallet_amount: number;
     created_at: string;
 };
+
+export type FreelancerFromBackendType = {
+    id: string;
+    username: string;
+    email: string;
+    role: "freelancer";
+    description: string;
+    skills: string[];
+    profile_pic: string;
+};
