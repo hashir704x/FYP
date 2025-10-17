@@ -2,6 +2,7 @@ import { supabaseClient } from "@/Supabase-client";
 import type { ClientProfileFromBackendType } from "@/Types";
 
 export async function getClientProfileData(): Promise<ClientProfileFromBackendType> {
+    console.log("getClientProfileData() called");
     const { data, error } = await supabaseClient.from("clients").select("*").single();
 
     if (error) {
@@ -34,7 +35,7 @@ export async function updateClientProfileImage(file: File, clientId: string) {
         throw new Error("Image upload failed");
     }
 
-    const {  error: updateImageError } = await supabaseClient
+    const { error: updateImageError } = await supabaseClient
         .from("clients")
         .update({ profile_pic: imageData.publicUrl })
         .eq("id", clientId);

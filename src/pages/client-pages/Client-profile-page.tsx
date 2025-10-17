@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     getClientProfileData,
     updateClientProfileImage,
@@ -11,7 +11,7 @@ import type { UserType } from "@/Types";
 import { toast } from "sonner";
 
 const ClientProfilePage = () => {
-    
+    const queryClient = useQueryClient();
     const user = userAuthStore((state) => state.user) as UserType;
     const setUser = userAuthStore((state) => state.setUser);
     const [preview, setPreview] = useState<string | null>(null);
@@ -26,6 +26,10 @@ const ClientProfilePage = () => {
         mutationFn: (file: File) => updateClientProfileImage(file, user.userId),
         onSuccess: (newUrl) => {
             setUser({ ...user, profile_pic: newUrl });
+            queryClient.invalidateQueries({
+                queryKey: ["get-client-profile-data"],
+            });
+            setSelectedFile(null);
             toast.success("Image updated successfully");
         },
         onError: (error) => {
@@ -42,8 +46,6 @@ const ClientProfilePage = () => {
         setSelectedFile(file);
         setPreview(URL.createObjectURL(file));
     }
-
-    console.log(preview, data?.profile_pic)
 
     return (
         <div>
