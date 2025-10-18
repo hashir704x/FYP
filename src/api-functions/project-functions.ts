@@ -1,5 +1,9 @@
 import { supabaseClient } from "@/Supabase-client";
-import type { ProjectsFromBackendType, CreateProjectType } from "@/Types";
+import type {
+    ProjectsFromBackendType,
+    CreateProjectType,
+    ProjectDetailsTypeFromBackend,
+} from "@/Types";
 
 export async function getAllProjectsForClient(): Promise<ProjectsFromBackendType[]> {
     console.log("getAllProjectsForClient() called");
@@ -38,4 +42,24 @@ export async function createProject(projectData: CreateProjectType): Promise<str
     }
 
     return data.project_id;
+}
+
+export async function getProjectById(
+    projectId: string
+): Promise<ProjectDetailsTypeFromBackend> {
+    console.log("getProjectById() called");
+
+    const { data, error } = await supabaseClient
+        .from("projects")
+        .select(
+            "*, project_freelancers_join_table(*, freelancers(id, username, profile_pic, skills, description))"
+        )
+        .eq("project_id", projectId);
+
+    if (error) {
+        console.error("Error occurred in getProjectById function", error.message);
+        throw new Error(error.message);
+    }
+
+    return data[0];
 }

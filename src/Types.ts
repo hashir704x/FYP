@@ -73,3 +73,24 @@ export type InvitationsFromBackendType = {
         profile_pic: string;
     }[];
 };
+
+export type ProjectDetailsTypeFromBackend = {
+    project_id: string;
+    project_title: string;
+    project_description: string;
+    project_budget: number;
+    client_id: string;
+    created_at: string;
+    required_skills: string[];
+
+    project_freelancers_join_table: {
+        freelancers: {
+            id: string;
+            username: string;
+            email: string;
+            profile_pic: string;
+            skills: string[];
+            description: string;
+        };
+    }[];
+};
