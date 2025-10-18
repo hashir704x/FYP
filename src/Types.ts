@@ -54,3 +54,22 @@ export type FreelancerFromBackendType = {
     skills: string[];
     profile_pic: string;
 };
+
+export type InvitationsFromBackendType = {
+    id: string;
+    project_id: string;
+    client_id: string;
+    created_at: string;
+    projects: {
+        project_id: string;
+        project_title: string;
+        project_description: string;
+        required_skils: string[];
+    }[];
+    clients: {
+        id: string;
+        email: string;
+        username: string;
+        profile_pic: string;
+    }[];
+};
