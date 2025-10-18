@@ -1,9 +1,19 @@
 import type { FreelancerFromBackendType } from "@/Types";
 import { Button } from "./ui/button";
+import { Link, useLocation } from "react-router-dom";
+import AddFreelancerConfirmDialog from "./Add-freelancer-confirm-dialog";
 
 export default function FreelancerCard(props: FreelancerFromBackendType) {
+    const location = useLocation();
+
     return (
-        <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 p-4 flex flex-col w-[300px] justify-between h-[330px]">
+        <div
+            className={`bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 p-4 flex flex-col w-[300px] justify-between ${
+                location.pathname.includes("/client/project-details")
+                    ? "h-[370px]"
+                    : "h-[330px]"
+            } `}
+        >
             <div className="flex items-center gap-4">
                 <img src={props.profile_pic} alt="profile-pic" className="w-[120px]" />
 
@@ -33,13 +43,15 @@ export default function FreelancerCard(props: FreelancerFromBackendType) {
             </div>
 
             {/* Action Button */}
-            <Button
-                variant="custom"
-                // onClick={() => onViewProfile(freelancer.id)}
-                className="mt-2 w-full"
-            >
-                View Profile
-            </Button>
+            <Link to={`/client/freelancer-details/${props.id}`}>
+                <Button variant="custom" className="mt-2 w-full">
+                    View Profile
+                </Button>
+            </Link>
+
+            {location.pathname.includes("/client/project-details") && (
+                <AddFreelancerConfirmDialog freelancerId={props.id} />
+            )}
         </div>
     );
 }

@@ -1,18 +1,26 @@
 import { supabaseClient } from "@/Supabase-client";
 import { type InvitationsFromBackendType } from "@/Types";
 
-export async function sendInvitation(
-    clientId: string,
-    projectId: string,
-    freelancerId: string
-): Promise<void> {
+export async function sendInvitation({
+    clientId,
+    projectId,
+    freelancerId,
+}: {
+    clientId: string;
+    projectId: string;
+    freelancerId: string;
+}): Promise<void> {
     console.log("sendInvitation() called");
 
-    const { error } = await supabaseClient.from("invitations").insert({
-        client_id: clientId,
-        project_id: projectId,
-        freelancer_id: freelancerId,
-    });
+    console.log(clientId, projectId, freelancerId);
+
+    const { error } = await supabaseClient.from("invitations").insert([
+        {
+            client_id: clientId,
+            project_id: projectId,
+            freelancer_id: freelancerId,
+        },
+    ]);
 
     if (error) {
         console.error("Error sending invitation:", error.message);

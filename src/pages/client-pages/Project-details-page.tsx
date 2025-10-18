@@ -45,7 +45,7 @@ const ProjectDetailsPage = () => {
                                 {data.project_title}
                             </h1>
 
-                            <div className="text-sm border-2 p-2 rounded-md mb-4">
+                            <div className="text-sm border-2 p-2 rounded-md mb-4 md:mb-0">
                                 <button
                                     onClick={() => setActiveOption("info")}
                                     className={`${

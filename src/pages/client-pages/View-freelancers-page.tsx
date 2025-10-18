@@ -29,14 +29,12 @@ const ViewFreelancersPage = () => {
             )}
 
             {data && (
-                <div>
-                    <div className="flex p-4 gap-6 flex-wrap justify-center md:justify-start">
-                        {data.map((item) => (
-                            <Link to={`#`} key={item.id}>
-                                <FreelancerCard {...item} />
-                            </Link>
-                        ))}
-                    </div>
+                <div className="flex p-4 gap-6 flex-wrap justify-center md:justify-start">
+                    {data.map((item) => (
+                        <Link to={`#`} key={item.id}>
+                            <FreelancerCard {...item} />
+                        </Link>
+                    ))}
                 </div>
             )}
         </div>
