@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 import { userAuthStore } from "@/store/user-auth-store";
 import type { UserType } from "@/Types";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 type PropsType = {
     freelancerId: string;
@@ -24,12 +25,17 @@ type PropsType = {
 export default function AddFreelancerConfirmDialog(props: PropsType) {
     const { projectId } = useParams();
 
+    const queryClient = useQueryClient();
+
     const user = userAuthStore((state) => state.user) as UserType;
 
     const { mutate } = useMutation({
         mutationFn: sendInvitation,
         onSuccess: () => {
             toast.success("Invitation send successfully");
+            queryClient.invalidateQueries({
+                queryKey: ["get-freelancers-invitations"],
+            });
         },
 
         onError: (error) => {
