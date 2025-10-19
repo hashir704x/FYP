@@ -22,7 +22,7 @@ export default function InvitedFreelancersSidebar() {
 
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getFreelancerInvitationsForProject(projectId as string),
-        queryKey: ["get-freelancers-invitations"],
+        queryKey: ["get-freelancers-invitations", projectId],
     });
 
     return (

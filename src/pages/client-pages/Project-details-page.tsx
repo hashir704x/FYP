@@ -10,7 +10,7 @@ const ProjectDetailsPage = () => {
     const { projectId } = useParams();
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getProjectById(projectId as string),
-        queryKey: ["get-project-details"],
+        queryKey: ["get-project-details", projectId],
     });
 
     const [activeOption, setActiveOption] = useState<

@@ -45,14 +45,13 @@ export type ClientProfileFromBackendType = {
     created_at: string;
 };
 
-export type FreelancerFromBackendType = {
+export type FreelancerFromBackendPublicType = {
     id: string;
     username: string;
-    email: string;
-    role: "freelancer";
     description: string;
     skills: string[];
     profile_pic: string;
+    role: string;
 };
 
 export type InvitationsFromBackendType = {
