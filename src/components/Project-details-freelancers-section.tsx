@@ -2,6 +2,7 @@ import { getAllFreelancers } from "@/api-functions/freelancer-functions";
 import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "./ui/spinner";
 import FreelancerCard from "./Freelancer-card";
+import InvitedFreelancersSidebar from "./Invited-freelancers-sidebar";
 
 const ProjectDetailsFreelancerSection = () => {
     const { data, isLoading, isError } = useQuery({
@@ -22,6 +23,10 @@ const ProjectDetailsFreelancerSection = () => {
                     <p>Error in getting freelancers!</p>
                 </div>
             )}
+
+            <div>
+                <InvitedFreelancersSidebar />
+            </div>
 
             {data && (
                 <div className="flex p-4 gap-6 flex-wrap justify-center md:justify-start">

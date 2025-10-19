@@ -1,5 +1,8 @@
 import { supabaseClient } from "@/Supabase-client";
-import { type InvitationsFromBackendType } from "@/Types";
+import {
+    type InvitationsForProjectFromBackendType,
+    type InvitationsFromBackendType,
+} from "@/Types";
 
 export async function sendInvitation({
     clientId,
@@ -11,8 +14,6 @@ export async function sendInvitation({
     freelancerId: string;
 }): Promise<void> {
     console.log("sendInvitation() called");
-
-    console.log(clientId, projectId, freelancerId);
 
     const { error } = await supabaseClient.from("invitations").insert([
         {
@@ -46,6 +47,25 @@ export async function getFreelancerInvitations(
     }
 
     return data;
+}
+
+export async function getFreelancerInvitationsForProject(
+    projectId: string
+): Promise<InvitationsForProjectFromBackendType[]> {
+    console.log("getFreelancerInvitationsForProject() called");
+
+    const { data, error } = await supabaseClient
+        .from("invitations")
+        .select(
+            "id, created_at, freelancers(id, username, email, role, skills, profile_pic)"
+        )
+        .eq("project_id", projectId);
+
+    if (error) {
+        console.error("Error getting invitations for project:", error.message);
+        throw new Error(error.message);
+    }
+    return data as unknown as InvitationsForProjectFromBackendType[];
 }
 
 export async function deleteInvitation(invitationId: string): Promise<void> {

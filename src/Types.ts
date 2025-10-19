@@ -94,3 +94,16 @@ export type ProjectDetailsTypeFromBackend = {
         };
     }[];
 };
+
+export type InvitationsForProjectFromBackendType = {
+    id: string;
+    created_at: string;
+    freelancers: {
+        id: string;
+        role: string;
+        email: string;
+        username: string;
+        profile_pic: string;
+        skills: string[];
+    };
+};
