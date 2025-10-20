@@ -19,17 +19,20 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 type PropsType = {
-    freelancerId: string;
+    freelancerId?: string;
+    projectId?: string;
 };
 
-export default function AddFreelancerConfirmDialog(props: PropsType) {
-    const { projectId } = useParams();
+import { Spinner } from "./ui/spinner";
+
+export default function InviteFreelancerConfirmDialog(props: PropsType) {
+    const { projectId, freelancerId } = useParams();
 
     const queryClient = useQueryClient();
 
     const user = userAuthStore((state) => state.user) as UserType;
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: sendInvitation,
         onSuccess: () => {
             toast.success("Invitation send successfully");
@@ -49,11 +52,9 @@ export default function AddFreelancerConfirmDialog(props: PropsType) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button
-                    className="bg-white text-[var(--my-blue)] border border-[var(--my-blue)]  
-               transition-all duration-300 
-               hover:bg-[var(--my-blue)] hover:text-white"
-                >
+                <Button variant="custom" disabled={isPending} className="mt-3">
+                    {" "}
+                    {isPending && <Spinner />}
                     Invite Freelancer
                 </Button>
             </AlertDialogTrigger>
@@ -70,9 +71,12 @@ export default function AddFreelancerConfirmDialog(props: PropsType) {
                     <AlertDialogAction
                         onClick={() =>
                             mutate({
-                                projectId: projectId as string,
+                                projectId:
+                                    (props.projectId as string) || (projectId as string),
                                 clientId: user.userId,
-                                freelancerId: props.freelancerId,
+                                freelancerId:
+                                    (props.freelancerId as string) ||
+                                    (freelancerId as string),
                             })
                         }
                         className="bg-[var(--my-blue)] hover:bg-[var(--my-blue-light)] cursor-pointer"

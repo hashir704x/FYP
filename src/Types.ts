@@ -45,7 +45,7 @@ export type ClientProfileFromBackendType = {
     created_at: string;
 };
 
-export type FreelancerFromBackendPublicType = {
+export type FreelancerFromBackendType = {
     id: string;
     username: string;
     description: string;

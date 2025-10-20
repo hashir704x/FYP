@@ -1,7 +1,7 @@
 import { supabaseClient } from "@/Supabase-client";
-import { type FreelancerFromBackendPublicType } from "@/Types";
+import { type FreelancerFromBackendType } from "@/Types";
 
-export async function getAllFreelancers(): Promise<FreelancerFromBackendPublicType[]> {
+export async function getAllFreelancers(): Promise<FreelancerFromBackendType[]> {
     console.log("getAllFreelancers() called");
 
     const { data, error } = await supabaseClient
@@ -17,10 +17,10 @@ export async function getAllFreelancers(): Promise<FreelancerFromBackendPublicTy
 
 export async function getFreelancerDataById(
     freelancerId: string
-): Promise<FreelancerFromBackendPublicType> {
+): Promise<FreelancerFromBackendType> {
     const { data, error } = await supabaseClient
         .from("freelancers")
-        .select("id, username, email, role, description, skills, profile_pic")
+        .select("id, username, role, description, skills, profile_pic")
         .eq("id", freelancerId)
         .single();
 
