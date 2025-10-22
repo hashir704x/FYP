@@ -96,6 +96,7 @@ export type ProjectDetailsTypeFromBackend = {
 
 export type InvitationsForProjectFromBackendType = {
     id: string;
+    project_id: string
     created_at: string;
     freelancers: {
         id: string;

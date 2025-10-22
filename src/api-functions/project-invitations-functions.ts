@@ -57,7 +57,7 @@ export async function getFreelancerInvitationsForProject(
     const { data, error } = await supabaseClient
         .from("invitations")
         .select(
-            "id, created_at, freelancers(id, username, email, role, skills, profile_pic)"
+            "id, created_at, project_id, freelancers(id, username, email, role, skills, profile_pic)"
         )
         .eq("project_id", projectId);
 

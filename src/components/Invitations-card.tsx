@@ -13,7 +13,7 @@ const InvitationsCard = (props: InvitationsForProjectFromBackendType) => {
         onSuccess: () => {
             toast.success("Invitation canceled successfully");
             queryClient.invalidateQueries({
-                queryKey: ["get-freelancers-invitations"],
+                queryKey: ["get-freelancers-invitations", props.project_id],
             });
         },
         onError: () => {
