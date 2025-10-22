@@ -54,7 +54,19 @@ export type FreelancerFromBackendType = {
     role: string;
 };
 
-export type InvitationsFromBackendType = {
+export type FreelancerOwnDataFromBackendType = {
+    id: string;
+    username: string;
+    description: string;
+    skills: string[];
+    profile_pic: string;
+    role: string;
+    wallet_amount: number;
+    created_at: string;
+    email: string;
+};
+
+export type InvitationsForFreelancerFromBackendType = {
     id: string;
     project_id: string;
     client_id: string;
@@ -96,7 +108,7 @@ export type ProjectDetailsTypeFromBackend = {
 
 export type InvitationsForProjectFromBackendType = {
     id: string;
-    project_id: string
+    project_id: string;
     created_at: string;
     freelancers: {
         id: string;

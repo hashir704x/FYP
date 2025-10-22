@@ -4,7 +4,6 @@ import type { ClientProfileFromBackendType } from "@/Types";
 export async function getClientProfileData(): Promise<ClientProfileFromBackendType> {
     console.log("getClientProfileData() called");
 
-    
     const { data, error } = await supabaseClient.from("clients").select("*").single();
 
     if (error) {
@@ -12,15 +11,16 @@ export async function getClientProfileData(): Promise<ClientProfileFromBackendTy
         throw new Error(error.message);
     }
     return data;
-
 }
 
-export async function updateClientProfileImage(file: File, clientId: string) {
+export async function updateClientProfileImage(
+    file: File,
+    clientId: string
+): Promise<string> {
     console.log("updateClientProfileImage() called");
-    
 
     const fileName = `${Date.now()}-${file.name}`;
-    
+
     const { error: uploadError } = await supabaseClient.storage
         .from("project-media")
         .upload(`profile-pics/${fileName}`, file, {

@@ -41,7 +41,7 @@ export default function FreelancerSidebar() {
 
     return (
         <div className="dark">
-            <Sidebar>
+            <Sidebar className="border-none">
                 <SidebarHeader>
                     <div className="flex justify-between items-center">
                         <span className="font-semibold text-xl">Freelansync</span>{" "}

@@ -67,7 +67,7 @@ const ShowProjectsForInvitationsSidebar = () => {
                     )}
 
                     {data && data.length >= 1 && (
-                        <div>
+                        <div className="flex flex-col gap-5">
                             {data.map((item) => (
                                 <ShowProjectsForInvitationsCard
                                     key={item.project_id}

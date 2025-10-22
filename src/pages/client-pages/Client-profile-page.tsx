@@ -66,81 +66,92 @@ const ClientProfilePage = () => {
             )}
 
             {data && (
-                <div className="mt-4 flex flex-col items-center bg-white rounded-2xl shadow-md p-6 w-full max-w-sm mx-auto border border-gray-100">
-                    <div className="text-center flex flex-col items-center">
-                        <label
-                            htmlFor="profilePicInput"
-                            className="relative cursor-pointer inline-block group"
-                        >
-                            <img
-                                src={preview || data.profile_pic}
-                                alt="profile-img"
-                                className="w-32 h-32 rounded-full object-cover "
+                <div className="flex justify-center items-center px-4 py-6">
+                    <div className="w-full max-w-5xl bg-white rounded-2xl shadow-lg border border-gray-100 p-8 md:p-10 flex flex-col md:flex-row items-center md:items-start gap-10">
+                        {/* Left Section — Profile Picture */}
+                        <div className="flex flex-col items-center w-full md:w-1/3 text-center">
+                            <label
+                                htmlFor="profilePicInput"
+                                className="relative cursor-pointer inline-block group"
+                            >
+                                <img
+                                    src={preview || data.profile_pic}
+                                    alt="profile-img"
+                                    className="w-44 h-44 rounded-full object-cover border border-gray-200 shadow-sm"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                                    <span className="text-white text-sm font-medium">
+                                        Change image
+                                    </span>
+                                </div>
+                            </label>
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                id="profilePicInput"
+                                onChange={handleFileChange}
+                                hidden
+                                disabled={isPending}
                             />
 
-                            {/* Hover overlay */}
-                            <div
-                                className="absolute inset-0 flex items-center justify-center bg-black/50 
-                       opacity-0 group-hover:opacity-100 transition-opacity rounded-full"
-                            >
-                                <span className="text-white text-sm font-medium">
-                                    Change image
-                                </span>
+                            {selectedFile && (
+                                <Button
+                                    disabled={isPending}
+                                    onClick={() => mutate(selectedFile)}
+                                    variant="custom"
+                                    className="mt-4"
+                                >
+                                    {isPending && <Spinner />} Confirm change
+                                </Button>
+                            )}
+                        </div>
+
+                        {/* Right Section — Client Info */}
+                        <div className="flex-1 w-full space-y-6 text-gray-700">
+                            <h2 className="text-2xl font-semibold text-[var(--my-blue)] border-b pb-2">
+                                Client Profile
+                            </h2>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
+                                    <p className="text-sm text-gray-500">Username</p>
+                                    <p className="text-lg font-semibold">
+                                        {data.username}
+                                    </p>
+                                </div>
+
+                                <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
+                                    <p className="text-sm text-gray-500">Email</p>
+                                    <p className="text-lg font-semibold break-all">
+                                        {data.email}
+                                    </p>
+                                </div>
+
+                                <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
+                                    <p className="text-sm text-gray-500">Role</p>
+                                    <p className="text-lg font-semibold">{data.role}</p>
+                                </div>
+
+                                <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
+                                    <p className="text-sm text-gray-500">
+                                        Wallet Balance
+                                    </p>
+                                    <p className="text-lg font-semibold text-green-600">
+                                        Rs {data.wallet_amount}
+                                    </p>
+                                </div>
+
+                                <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm sm:col-span-2">
+                                    <p className="text-sm text-gray-500">
+                                        Account Created On
+                                    </p>
+                                    <p className="text-lg font-semibold">
+                                        {new Date(data.created_at).toLocaleDateString()}
+                                    </p>
+                                </div>
                             </div>
-                        </label>
-
-                        {/* hidden file input */}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            id="profilePicInput"
-                            onChange={handleFileChange}
-                            hidden
-                            disabled={isPending}
-                        />
-                        {selectedFile && (
-                            <Button
-                                disabled={isPending}
-                                onClick={() => mutate(selectedFile)}
-                                variant="custom"
-                                className="mt-3"
-                            >
-                                {isPending && <Spinner />} Confirm change
-                            </Button>
-                        )}
-                    </div>
-
-                    <div className="mt-6 space-y-3 text-gray-700 w-full">
-                        <p className="flex justify-between border-b pb-1">
-                            <span className="font-semibold text-gray-500">Username:</span>
-                            <span className="font-medium">{data.username}</span>
-                        </p>
-
-                        <p className="flex justify-between border-b pb-1">
-                            <span className="font-semibold text-gray-500">Email:</span>
-                            <span className="font-medium">{data.email}</span>
-                        </p>
-
-                        <p className="flex justify-between border-b pb-1">
-                            <span className="font-semibold text-gray-500">Role:</span>
-                            <span className="font-medium">{data.role}</span>
-                        </p>
-
-                        <p className="flex justify-between border-b pb-1">
-                            <span className="font-semibold text-gray-500">Wallet:</span>
-                            <span className="font-medium text-green-600">
-                                Rs {data.wallet_amount}
-                            </span>
-                        </p>
-
-                        <p className="flex justify-between">
-                            <span className="font-semibold text-gray-500">
-                                Created on:
-                            </span>
-                            <span className="font-medium">
-                                {new Date(data.created_at).toLocaleDateString()}
-                            </span>
-                        </p>
+                        </div>
                     </div>
                 </div>
             )}

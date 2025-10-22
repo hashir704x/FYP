@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { getFreelancerInvitationsForProject } from "@/api-functions/project-invitations-functions";
+import { getInvitationsForProject } from "@/api-functions/project-invitations-functions";
 import { useParams } from "react-router-dom";
 import InvitationsCard from "./Invitations-card";
 
@@ -21,7 +21,7 @@ export default function InvitedFreelancersSidebar() {
     const { projectId } = useParams();
 
     const { data, isLoading, isError } = useQuery({
-        queryFn: () => getFreelancerInvitationsForProject(projectId as string),
+        queryFn: () => getInvitationsForProject(projectId as string),
         queryKey: ["get-freelancers-invitations", projectId],
     });
 

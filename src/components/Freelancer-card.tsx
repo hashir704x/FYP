@@ -15,7 +15,7 @@ export default function FreelancerCard(props: FreelancerFromBackendType) {
             } `}
         >
             <div className="flex items-center gap-4">
-                <img src={props.profile_pic} alt="profile-pic" className="w-[120px]" />
+                <img src={props.profile_pic} alt="profile-pic" className="w-[120px] rounded-full object-cover" />
 
                 <div className="flex flex-col items-center font-semibold">
                     <h3 className="text-lg  text-gray-800">{props.username}</h3>

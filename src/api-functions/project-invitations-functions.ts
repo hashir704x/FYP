@@ -1,7 +1,7 @@
 import { supabaseClient } from "@/Supabase-client";
 import {
+    type InvitationsForFreelancerFromBackendType,
     type InvitationsForProjectFromBackendType,
-    type InvitationsFromBackendType,
 } from "@/Types";
 
 export async function sendInvitation({
@@ -29,10 +29,10 @@ export async function sendInvitation({
     }
 }
 
-export async function getFreelancerInvitations(
+export async function getInvitationsForFreelancer(
     freelancerId: string
-): Promise<InvitationsFromBackendType[]> {
-    console.log("getFreelancerInvitations() called");
+): Promise<InvitationsForFreelancerFromBackendType[]> {
+    console.log("getInvitationsForFreelancer() called");
 
     const { error, data } = await supabaseClient
         .from("invitations")
@@ -49,10 +49,10 @@ export async function getFreelancerInvitations(
     return data;
 }
 
-export async function getFreelancerInvitationsForProject(
+export async function getInvitationsForProject(
     projectId: string
 ): Promise<InvitationsForProjectFromBackendType[]> {
-    console.log("getFreelancerInvitationsForProject() called");
+    console.log("getInvitationsForProject() called");
 
     const { data, error } = await supabaseClient
         .from("invitations")
