@@ -6,7 +6,7 @@ import { Spinner } from "./ui/spinner";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
-const InvitationsCard = (props: InvitationsForProjectFromBackendType) => {
+const SendInvitationsCard = (props: InvitationsForProjectFromBackendType) => {
     const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
         mutationFn: deleteInvitation,
@@ -76,4 +76,4 @@ const InvitationsCard = (props: InvitationsForProjectFromBackendType) => {
     );
 };
 
-export default InvitationsCard;
+export default SendInvitationsCard;

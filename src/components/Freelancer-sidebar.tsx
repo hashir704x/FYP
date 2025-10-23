@@ -1,4 +1,4 @@
-import { CircleX, Inbox, LogOut, User } from "lucide-react";
+import { CircleX, Inbox, LogOut, MailQuestionMark, User } from "lucide-react";
 import { userAuthStore } from "@/store/user-auth-store";
 import { supabaseClient } from "@/Supabase-client";
 import { Link } from "react-router-dom";
@@ -28,6 +28,11 @@ const items = [
         url: "/freelancer/freelancer-profile",
         icon: User,
     },
+    {
+        title: "Invitations",
+        url: "/freelancer/freelancer-invites",
+        icon: MailQuestionMark
+    }
 ];
 
 export default function FreelancerSidebar() {

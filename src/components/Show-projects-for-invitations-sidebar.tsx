@@ -23,8 +23,6 @@ const ShowProjectsForInvitationsSidebar = () => {
         queryKey: ["get-all-projects"],
     });
 
-    console.log("Data:", data);
-
     return (
         <Sheet>
             <SheetTrigger asChild>

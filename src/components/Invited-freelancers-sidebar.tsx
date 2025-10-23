@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { getInvitationsForProject } from "@/api-functions/project-invitations-functions";
 import { useParams } from "react-router-dom";
-import InvitationsCard from "./Invitations-card";
+import SendInvitationsCard from "./Send-invitations-card";
 
 import {
     Sheet,
@@ -69,7 +69,7 @@ export default function InvitedFreelancersSidebar() {
                     {data && data.length >= 1 && (
                         <div>
                             {data.map((item) => (
-                                <InvitationsCard key={item.id} {...item} />
+                                <SendInvitationsCard key={item.id} {...item} />
                             ))}
                         </div>
                     )}

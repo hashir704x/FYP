@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import ProjectCard from "@/components/Project-card";
 
 const AllProjectsPage = () => {
-    
     const { data, isLoading, isError } = useQuery({
         queryFn: getAllProjectsForClient,
         queryKey: ["get-all-projects"],

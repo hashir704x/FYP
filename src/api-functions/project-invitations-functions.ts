@@ -37,7 +37,7 @@ export async function getInvitationsForFreelancer(
     const { error, data } = await supabaseClient
         .from("invitations")
         .select(
-            "id, project_id, client_id, created_at, projects(project_id, project_title, project_description, required_skils), clients(id, email, username, profile_pic)"
+            "id, project_id, client_id, freelancer_id, created_at, projects(project_id, project_title, project_description, required_skills), clients(id, email, username, profile_pic)"
         )
         .eq("freelancer_id", freelancerId);
 
@@ -46,7 +46,7 @@ export async function getInvitationsForFreelancer(
         throw new Error(error.message);
     }
 
-    return data;
+    return data as unknown as InvitationsForFreelancerFromBackendType[];
 }
 
 export async function getInvitationsForProject(

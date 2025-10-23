@@ -18,10 +18,12 @@ const ProjectDetailsPage = lazy(
     () => import("@/pages/client-pages/Project-details-page")
 );
 const ClientProfilePage = lazy(() => import("@/pages/client-pages/Client-profile-page"));
-const ViewFreelancersPage = lazy(() => import("@/pages/client-pages/View-freelancers-page"));
-const FreelancerDetailsPage = lazy(() => import("@/pages/client-pages/Freelancer-details-page"));
-
-
+const ViewFreelancersPage = lazy(
+    () => import("@/pages/client-pages/View-freelancers-page")
+);
+const FreelancerDetailsPage = lazy(
+    () => import("@/pages/client-pages/Freelancer-details-page")
+);
 
 // Freelancer Pages
 const FreelancerLayout = lazy(() => import("@/layouts/Freelancer-layout"));
@@ -30,6 +32,9 @@ const FreelancerDashboardPage = lazy(
 );
 const FreelancerProfilePage = lazy(
     () => import("@/pages/freelancer-pages/Freelancer-profile-page")
+);
+const FreelancerInvitesPage = lazy(
+    () => import("@/pages/freelancer-pages/Freelancer-invites-page")
 );
 
 const router = createBrowserRouter([
@@ -71,12 +76,12 @@ const router = createBrowserRouter([
             },
             {
                 path: "view-freelancers",
-                element: <ViewFreelancersPage />
+                element: <ViewFreelancersPage />,
             },
             {
                 path: "freelancer-details/:freelancerId",
-                element: <FreelancerDetailsPage />
-            }
+                element: <FreelancerDetailsPage />,
+            },
         ],
     },
     {
@@ -90,6 +95,10 @@ const router = createBrowserRouter([
             {
                 path: "freelancer-profile",
                 element: <FreelancerProfilePage />,
+            },
+            {
+                path: "freelancer-invites",
+                element: <FreelancerInvitesPage />,
             },
         ],
     },
