@@ -109,7 +109,7 @@ const ProjectDetailsPage = () => {
                     )}
 
                     {activeOption === "freelancers" && (
-                        <ProjectDetailsFreelancerSection />
+                        <ProjectDetailsFreelancerSection projectData={data} />
                     )}
                 </div>
             )}

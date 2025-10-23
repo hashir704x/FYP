@@ -10,7 +10,7 @@ const FreelancerInvitesPage = () => {
 
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getInvitationsForFreelancer(user.userId),
-        queryKey: ["get-freelancer-invitations"],
+        queryKey: ["get-invitations-for-freelancer"],
     });
 
     return (
@@ -31,8 +31,10 @@ const FreelancerInvitesPage = () => {
                 </div>
             )}
 
+            {data && data.length === 0 && <div>You have no invitations</div>}
+
             {data && data.length >= 1 && (
-                <div>
+                <div className="py-6">
                     {data.map((item) => (
                         <FreelancerInvitationCard key={item.id} {...item} />
                     ))}

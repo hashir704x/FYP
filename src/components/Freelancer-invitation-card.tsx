@@ -1,6 +1,5 @@
 import type { InvitationsForFreelancerFromBackendType } from "@/Types";
 import { CalendarDays, User } from "lucide-react";
-import { Button } from "./ui/button";
 import FreelancerConfirmInvitationDialog from "./Freelancer-confirm-invitation-dialog";
 
 const FreelancerInvitationCard = (props: InvitationsForFreelancerFromBackendType) => {
@@ -54,12 +53,16 @@ const FreelancerInvitationCard = (props: InvitationsForFreelancerFromBackendType
                         action="accept"
                         freelancerId={props.freelancer_id}
                         projectId={props.project_id}
+                        clientId={props.client_id}
+                        invitationId={props.id}
                     />
 
                     <FreelancerConfirmInvitationDialog
                         action="reject"
                         freelancerId={props.freelancer_id}
                         projectId={props.project_id}
+                        clientId={props.client_id}
+                        invitationId={props.id}
                     />
                 </div>
             </div>

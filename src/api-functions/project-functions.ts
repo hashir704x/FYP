@@ -5,6 +5,8 @@ import type {
     ProjectDetailsTypeFromBackend,
 } from "@/Types";
 
+import { deleteInvitation } from "./project-invitations-functions";
+
 export async function getAllProjectsForClient(): Promise<ProjectsFromBackendType[]> {
     console.log("getAllProjectsForClient() called");
 
@@ -52,7 +54,7 @@ export async function getProjectById(
     const { data, error } = await supabaseClient
         .from("projects")
         .select(
-            "*, project_freelancers_join_table(*, freelancers(id, username, profile_pic, skills, description))"
+            "*, project_freelancers_join_table(freelancers(id, username, profile_pic, skills, description))"
         )
         .eq("project_id", projectId);
 
@@ -62,4 +64,36 @@ export async function getProjectById(
     }
 
     return data[0];
+}
+
+export async function addFreelancerToProject({
+    clientId,
+    freelancerId,
+    invitationId,
+    projectId,
+}: {
+    projectId: string;
+    clientId: string;
+    freelancerId: string;
+    invitationId: string;
+}): Promise<void> {
+    const { error } = await supabaseClient.from("project_freelancers_join_table").insert([
+        {
+            freelancer_id: freelancerId,
+            client_id: clientId,
+            project_id: projectId,
+        },
+    ]);
+
+    if (error) {
+        console.error("Error occurred in addFreelancerToProject function", error.message);
+        throw new Error(error.message);
+    }
+
+    try {
+        await deleteInvitation(invitationId);
+    } catch (error) {
+        console.error("Error occurred in deleteInvitation function");
+        throw new Error("Something went wrong, cannot delete invitation");
+    }
 }

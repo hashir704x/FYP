@@ -3,12 +3,36 @@ import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "./ui/spinner";
 import FreelancerCard from "./Freelancer-card";
 import InvitedFreelancersSidebar from "./Invited-freelancers-sidebar";
+import { useEffect, useState } from "react";
+import type { FreelancerFromBackendType, ProjectDetailsTypeFromBackend } from "@/Types";
 
-const ProjectDetailsFreelancerSection = () => {
+type PropsType = {
+    projectData: ProjectDetailsTypeFromBackend;
+};
+
+const ProjectDetailsFreelancerSection = (props: PropsType) => {
+    const [availableFreelancers, setAvailableFreelancers] = useState<
+        FreelancerFromBackendType[]
+    >([]);
+
     const { data, isLoading, isError } = useQuery({
         queryFn: getAllFreelancers,
         queryKey: ["get-all-freelancers"],
     });
+
+    useEffect(() => {
+        console.log("running useEffect");
+        if (data) {
+            const addedFreelancersIds =
+                props.projectData.project_freelancers_join_table.map(
+                    (item) => item.freelancers.id
+                );
+            const filtered = data.filter(
+                (freelancer) => !addedFreelancersIds.includes(freelancer.id)
+            );
+            setAvailableFreelancers(filtered);
+        }
+    }, [data]);
 
     return (
         <div>
@@ -30,7 +54,7 @@ const ProjectDetailsFreelancerSection = () => {
 
             {data && (
                 <div className="flex p-4 gap-6 flex-wrap justify-center md:justify-start">
-                    {data.map((item) => (
+                    {availableFreelancers.map((item) => (
                         <FreelancerCard {...item} key={item.id} />
                     ))}
                 </div>
