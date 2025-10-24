@@ -15,6 +15,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Menu items.
 const items = [
@@ -48,10 +49,12 @@ const items = [
 export default function ClientSidebar() {
     const { toggleSidebar } = useSidebar();
     const resetUser = userAuthStore((state) => state.reset);
+    const queryClient = useQueryClient();
 
     async function handleLogout() {
         resetUser();
         await supabaseClient.auth.signOut();
+        queryClient.clear();
     }
 
     return (

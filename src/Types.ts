@@ -103,6 +103,7 @@ export type ProjectDetailsTypeFromBackend = {
             profile_pic: string;
             skills: string[];
             description: string;
+            role: string;
         };
     }[];
 };

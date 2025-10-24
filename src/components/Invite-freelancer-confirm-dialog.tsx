@@ -45,6 +45,11 @@ export default function InviteFreelancerConfirmDialog(props: PropsType) {
             console.error(error.message);
             if (error.message.includes("duplicate") || error.message.includes("unique")) {
                 toast.warning("Freelancer is already invited");
+            } else if (
+                error.message.includes("violates row-level") ||
+                error.message.includes("invitations")
+            ) {
+                toast.warning("Freelancer is already part of your project");
             } else toast.error("Failed to send invitation");
         },
     });

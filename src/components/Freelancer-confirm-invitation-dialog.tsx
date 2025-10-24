@@ -14,6 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { addFreelancerToProject } from "@/api-functions/project-functions";
+import { deleteInvitation } from "@/api-functions/project-invitations-functions";
 
 type PropsType = {
     freelancerId: string;
@@ -28,7 +29,7 @@ import { Spinner } from "./ui/spinner";
 export default function FreelancerConfirmInvitationDialog(props: PropsType) {
     const queryClient = useQueryClient();
 
-    const { mutate, isPending } = useMutation({
+    const { mutate: acceptMutation, isPending } = useMutation({
         mutationFn: addFreelancerToProject,
         onSuccess: () => {
             toast.success("You are now added to the project.");
@@ -36,10 +37,23 @@ export default function FreelancerConfirmInvitationDialog(props: PropsType) {
                 queryKey: ["get-invitations-for-freelancer"],
             });
         },
-
         onError: (error) => {
             console.error(error.message);
             toast.error(error.message);
+        },
+    });
+
+    const { mutate: rejectMutation, isPending: rejectionPending } = useMutation({
+        mutationFn: deleteInvitation,
+        onSuccess: () => {
+            toast.success("Invitation rejected");
+            queryClient.invalidateQueries({
+                queryKey: ["get-invitations-for-freelancer"],
+            });
+        },
+        onError: (error) => {
+            console.error(error.message);
+            toast.error("Failed to reject invitation.");
         },
     });
 
@@ -55,11 +69,11 @@ export default function FreelancerConfirmInvitationDialog(props: PropsType) {
                 ) : (
                     <Button
                         variant="destructive"
-                        disabled={isPending}
+                        disabled={rejectionPending}
                         className="mt-3 cursor-pointer"
                     >
                         {" "}
-                        {isPending && <Spinner />}
+                        {rejectionPending && <Spinner />}
                         Reject
                     </Button>
                 )}
@@ -76,15 +90,20 @@ export default function FreelancerConfirmInvitationDialog(props: PropsType) {
                     <AlertDialogCancel className="cursor-pointer">
                         Cancel
                     </AlertDialogCancel>
+                    {/* {props.action === "accept" ? } */}
                     <AlertDialogAction
-                        onClick={() =>
-                            mutate({
-                                clientId: props.clientId,
-                                freelancerId: props.freelancerId,
-                                projectId: props.projectId,
-                                invitationId: props.invitationId,
-                            })
-                        }
+                        onClick={() => {
+                            if (props.action === "accept") {
+                                acceptMutation({
+                                    clientId: props.clientId,
+                                    freelancerId: props.freelancerId,
+                                    projectId: props.projectId,
+                                    invitationId: props.invitationId,
+                                });
+                            } else {
+                                rejectMutation(props.invitationId);
+                            }
+                        }}
                         className={`${
                             props.action === "accept"
                                 ? "bg-[var(--my-blue)] hover:bg-[var(--my-blue-light)] cursor-pointer"

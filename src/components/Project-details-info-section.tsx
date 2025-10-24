@@ -1,6 +1,7 @@
 import type { ProjectDetailsTypeFromBackend } from "@/Types";
 import { Button } from "./ui/button";
 import { CirclePlus } from "lucide-react";
+import FreelancerCard from "./Freelancer-card";
 
 type PropsType = {
     projectData: ProjectDetailsTypeFromBackend;
@@ -38,7 +39,7 @@ const ProjectDetailsInfoSection = (props: PropsType) => {
             </section>
 
             <section>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-3">Freelancers</h2>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-3">Member Freelancers</h2>
 
                 {props.projectData.project_freelancers_join_table.length === 0 ? (
                     <div>
@@ -55,7 +56,15 @@ const ProjectDetailsInfoSection = (props: PropsType) => {
                         </Button>
                     </div>
                 ) : (
-                    <div></div>
+                    <div className="flex items-center gap-5">
+                        {props.projectData.project_freelancers_join_table.map((item) => (
+                            <FreelancerCard
+                                key={item.freelancers.id}
+                                freelancerData={item.freelancers}
+                                showInviteButton={false}
+                            />
+                        ))}
+                    </div>
                 )}
             </section>
         </section>

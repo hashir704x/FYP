@@ -44,10 +44,6 @@ const ShowProjectsForInvitationsCard = (props: ProjectsFromBackendType) => {
                 )}
             </div>
 
-            {/* <button className="cursor-pointer hover:bg-[var(--my-blue-light)] mt-5 bg-[var(--my-blue)] py-2 px-3 text-white text-xs rounded-full w-full transition-all duration-300">
-                Invite
-            </button> */}
-
             <InviteFreelancerConfirmDialog projectId={props.project_id} />
         </div>
     );

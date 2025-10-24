@@ -34,7 +34,7 @@ const FreelancerInvitesPage = () => {
             {data && data.length === 0 && <div>You have no invitations</div>}
 
             {data && data.length >= 1 && (
-                <div className="py-6">
+                <div className="py-6 px-4 flex flex-col items-center gap-6">
                     {data.map((item) => (
                         <FreelancerInvitationCard key={item.id} {...item} />
                     ))}

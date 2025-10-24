@@ -3,7 +3,6 @@ import FreelancerCard from "@/components/Freelancer-card";
 import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
 
-
 const ViewFreelancersPage = () => {
     const { data, isLoading, isError } = useQuery({
         queryFn: getAllFreelancers,
@@ -31,7 +30,11 @@ const ViewFreelancersPage = () => {
             {data && (
                 <div className="flex p-4 gap-6 flex-wrap justify-center md:justify-start">
                     {data.map((item) => (
-                        <FreelancerCard key={item.id} {...item}  />
+                        <FreelancerCard
+                            key={item.id}
+                            freelancerData={item}
+                            showInviteButton={false}
+                        />
                     ))}
                 </div>
             )}

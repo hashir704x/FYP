@@ -54,7 +54,7 @@ export async function getProjectById(
     const { data, error } = await supabaseClient
         .from("projects")
         .select(
-            "*, project_freelancers_join_table(freelancers(id, username, profile_pic, skills, description))"
+            "*, project_freelancers_join_table(freelancers(id, username, profile_pic, skills, description, role))"
         )
         .eq("project_id", projectId);
 
