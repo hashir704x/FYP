@@ -9,15 +9,22 @@ const LoginPage = lazy(() => import("@/pages/public-pages/Login/Login-page"));
 
 // Client Pages
 const ClientLayoutPage = lazy(() => import("@/layouts/Client-layout/Client-layout-page"));
-const CreateProjectPage = lazy(() => import("@/pages/client-pages/Create-project/Create-project-page"));
+const CreateProjectPage = lazy(
+    () => import("@/pages/client-pages/Create-project/Create-project-page")
+);
 const ClientDashboardPage = lazy(
     () => import("@/pages/client-pages/Client-dashboard/Client-dashboard-page")
 );
-const AllProjectsClientPage = lazy(() => import("@/pages/client-pages/All-projects-client/All-projects-client-page"));
-const ProjectDetailsClientPage = lazy(
-    () => import("@/pages/client-pages/Project-details-client/Project-details-client-page")
+const AllProjectsClientPage = lazy(
+    () => import("@/pages/client-pages/All-projects-client/All-projects-client-page")
 );
-const ClientProfilePage = lazy(() => import("@/pages/client-pages/Client-profile/Client-profile-page"));
+const ProjectDetailsClientPage = lazy(
+    () =>
+        import("@/pages/client-pages/Project-details-client/Project-details-client-page")
+);
+const ClientProfilePage = lazy(
+    () => import("@/pages/client-pages/Client-profile/Client-profile-page")
+);
 const ViewFreelancersPage = lazy(
     () => import("@/pages/client-pages/View-freelancers/View-freelancers-page")
 );
@@ -26,15 +33,27 @@ const FreelancerDetailsPage = lazy(
 );
 
 // Freelancer Pages
-const FreelancerLayoutPage = lazy(() => import("@/layouts/Freelancer-layout/Freelancer-layout-page"));
+const FreelancerLayoutPage = lazy(
+    () => import("@/layouts/Freelancer-layout/Freelancer-layout-page")
+);
 const FreelancerDashboardPage = lazy(
-    () => import("@/pages/freelancer-pages/Freelancer-dashboard/Freelancer-dashboard-page")
+    () =>
+        import("@/pages/freelancer-pages/Freelancer-dashboard/Freelancer-dashboard-page")
 );
 const FreelancerProfilePage = lazy(
     () => import("@/pages/freelancer-pages/Freelancer-profile/Freelancer-profile-page")
 );
 const FreelancerInvitesPage = lazy(
     () => import("@/pages/freelancer-pages/Freelancer-invites/Freelancer-invites-page")
+);
+const FreelancerProjectsPage = lazy(
+    () => import("@/pages/freelancer-pages/Freelancer-projects/Freelancer-projects-page")
+);
+const ProjectDetailsFreelancerPage = lazy(
+    () =>
+        import(
+            "@/pages/freelancer-pages/Project-details-freelancer/Project-details-freelancer-page"
+        )
 );
 
 const router = createBrowserRouter([
@@ -99,6 +118,14 @@ const router = createBrowserRouter([
             {
                 path: "freelancer-invites",
                 element: <FreelancerInvitesPage />,
+            },
+            {
+                path: "freelancer-projects",
+                element: <FreelancerProjectsPage />,
+            },
+            {
+                path: "project-details/:projectId",
+                element: <ProjectDetailsFreelancerPage />,
             },
         ],
     },

@@ -3,6 +3,7 @@ import type {
     ProjectsFromBackendType,
     CreateProjectType,
     ProjectDetailsTypeFromBackend,
+    FreelancerProjectsFromBackendType,
 } from "@/Types";
 
 import { deleteInvitation } from "./project-invitations-functions";
@@ -23,6 +24,26 @@ export async function getAllProjectsForClient(): Promise<ProjectsFromBackendType
         throw new Error(error.message);
     }
     return data;
+}
+
+export async function getAllProjectsForFreelancer(
+    freelancerId: string
+): Promise<FreelancerProjectsFromBackendType[]> {
+    const { data, error } = await supabaseClient
+        .from("project_freelancers_join_table")
+        .select(
+            "projects(project_id, client_id, project_title, project_description, project_budget, created_at, project_status, required_skills)"
+        )
+        .order("created_at", { ascending: false })
+        .eq("freelancer_id", freelancerId);
+    if (error) {
+        console.error(
+            "Error occurred in getAllProjectsForFreelancer function",
+            error.message
+        );
+        throw new Error(error.message);
+    }
+    return data as unknown as FreelancerProjectsFromBackendType[];
 }
 
 export async function createProject(projectData: CreateProjectType): Promise<string> {
@@ -77,7 +98,6 @@ export async function addFreelancerToProject({
     freelancerId: string;
     invitationId: string;
 }): Promise<void> {
-
     const { error } = await supabaseClient.from("project_freelancers_join_table").insert([
         {
             freelancer_id: freelancerId,

@@ -24,17 +24,6 @@ export type CreateProjectType = {
     client_id: string;
 };
 
-export type ProjectsFromBackendType = {
-    project_id: string;
-    client_id: string;
-    project_title: string;
-    project_description: string;
-    project_budget: number;
-    project_status: "DRAFT" | "IN_PROGRESS" | "COMPLETED";
-    required_skills: string[];
-    created_at: string;
-};
-
 export type ClientProfileFromBackendType = {
     id: string;
     username: string;
@@ -119,5 +108,29 @@ export type InvitationsForProjectFromBackendType = {
         username: string;
         profile_pic: string;
         skills: string[];
+    };
+};
+
+export type ProjectsFromBackendType = {
+    project_id: string;
+    client_id: string;
+    project_title: string;
+    project_description: string;
+    project_budget: number;
+    project_status: "DRAFT" | "IN_PROGRESS" | "COMPLETED";
+    required_skills: string[];
+    created_at: string;
+};
+
+export type FreelancerProjectsFromBackendType = {
+    projects: {
+        project_id: string;
+        client_id: string;
+        project_title: string;
+        project_description: string;
+        project_budget: number;
+        project_status: "DRAFT" | "IN_PROGRESS" | "COMPLETED";
+        required_skills: string[];
+        created_at: string;
     };
 };

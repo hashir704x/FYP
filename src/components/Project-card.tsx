@@ -1,7 +1,10 @@
-import { type ProjectsFromBackendType } from "@/Types";
+import { type ProjectsFromBackendType, type UserType } from "@/Types";
 import { Link } from "react-router-dom";
+import { userAuthStore } from "@/store/user-auth-store";
 
 const ProjectCard = (props: ProjectsFromBackendType) => {
+    const user = userAuthStore((state) => state.user) as UserType;
+
     return (
         <div className="border border-gray-200 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 w-[320px] flex flex-col justify-between">
             {/* Title */}
@@ -56,7 +59,11 @@ const ProjectCard = (props: ProjectsFromBackendType) => {
                 Created: {new Date(props.created_at).toLocaleDateString()}
             </p>
 
-            <Link to={`/client/project-details/${props.project_id}`}>
+            <Link
+                to={`/${
+                    user.role === "client" ? "client" : "freelancer"
+                }/project-details/${props.project_id}`}
+            >
                 <button className="cursor-pointer hover:bg-[var(--my-blue-light)] mt-3 bg-[var(--my-blue)] py-2 px-3 text-white text-xs rounded-full w-full transition-all duration-300">
                     Open
                 </button>

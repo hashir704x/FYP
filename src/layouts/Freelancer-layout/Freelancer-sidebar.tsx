@@ -1,4 +1,4 @@
-import { CircleX, Inbox, LogOut, MailQuestionMark, User } from "lucide-react";
+import { CircleX, FolderKanban, Inbox, LogOut, MailQuestionMark, User } from "lucide-react";
 import { userAuthStore } from "@/store/user-auth-store";
 import { supabaseClient } from "@/Supabase-client";
 import { Link } from "react-router-dom";
@@ -29,6 +29,11 @@ const items = [
         title: "My Profile",
         url: "/freelancer/freelancer-profile",
         icon: User,
+    },
+    {
+        title: "My Projects",
+        url: "/freelancer/freelancer-projects",
+        icon: FolderKanban,
     },
     {
         title: "Invitations",
