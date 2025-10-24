@@ -77,6 +77,7 @@ export async function addFreelancerToProject({
     freelancerId: string;
     invitationId: string;
 }): Promise<void> {
+
     const { error } = await supabaseClient.from("project_freelancers_join_table").insert([
         {
             freelancer_id: freelancerId,

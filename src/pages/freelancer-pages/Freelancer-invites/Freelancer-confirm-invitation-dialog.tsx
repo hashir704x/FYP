@@ -23,8 +23,7 @@ type PropsType = {
     invitationId: string;
     action: "accept" | "reject";
 };
-
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function FreelancerConfirmInvitationDialog(props: PropsType) {
     const queryClient = useQueryClient();
@@ -61,7 +60,11 @@ export default function FreelancerConfirmInvitationDialog(props: PropsType) {
         <AlertDialog>
             <AlertDialogTrigger asChild>
                 {props.action === "accept" ? (
-                    <Button variant="custom" disabled={isPending} className="mt-3">
+                    <Button
+                        variant="custom"
+                        disabled={isPending || rejectionPending}
+                        className="mt-3"
+                    >
                         {" "}
                         {isPending && <Spinner />}
                         Accept
@@ -69,7 +72,7 @@ export default function FreelancerConfirmInvitationDialog(props: PropsType) {
                 ) : (
                     <Button
                         variant="destructive"
-                        disabled={rejectionPending}
+                        disabled={rejectionPending || isPending}
                         className="mt-3 cursor-pointer"
                     >
                         {" "}
@@ -90,7 +93,7 @@ export default function FreelancerConfirmInvitationDialog(props: PropsType) {
                     <AlertDialogCancel className="cursor-pointer">
                         Cancel
                     </AlertDialogCancel>
-                    {/* {props.action === "accept" ? } */}
+
                     <AlertDialogAction
                         onClick={() => {
                             if (props.action === "accept") {

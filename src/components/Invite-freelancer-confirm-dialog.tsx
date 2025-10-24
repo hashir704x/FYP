@@ -37,7 +37,7 @@ export default function InviteFreelancerConfirmDialog(props: PropsType) {
         onSuccess: () => {
             toast.success("Invitation send successfully");
             queryClient.invalidateQueries({
-                queryKey: ["get-freelancers-invitations"],
+                queryKey: ["get-invited-freelancers"],
             });
         },
 

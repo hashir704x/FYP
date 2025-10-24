@@ -1,5 +1,5 @@
 import { type ProjectsFromBackendType } from "@/Types";
-import InviteFreelancerConfirmDialog from "./Invite-freelancer-confirm-dialog";
+import InviteFreelancerConfirmDialog from "../../../components/Invite-freelancer-confirm-dialog";
 
 const ShowProjectsForInvitationsCard = (props: ProjectsFromBackendType) => {
     return (

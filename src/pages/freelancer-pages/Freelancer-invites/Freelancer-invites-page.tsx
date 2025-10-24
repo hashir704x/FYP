@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { userAuthStore } from "@/store/user-auth-store";
 import type { UserType } from "@/Types";
 import { Spinner } from "@/components/ui/spinner";
-import FreelancerInvitationCard from "@/components/Freelancer-invitation-card";
+import FreelancerInvitationCard from "./Freelancer-invitation-card";
 
 const FreelancerInvitesPage = () => {
     const user = userAuthStore((state) => state.user) as UserType;

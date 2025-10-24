@@ -1,7 +1,7 @@
 import type { ProjectDetailsTypeFromBackend } from "@/Types";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
-import FreelancerCard from "./Freelancer-card";
+import FreelancerCard from "@/components/Freelancer-card";
 
 type PropsType = {
     projectData: ProjectDetailsTypeFromBackend;

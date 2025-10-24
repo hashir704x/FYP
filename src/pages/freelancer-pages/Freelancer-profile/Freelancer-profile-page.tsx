@@ -5,7 +5,10 @@ import { useState } from "react";
 import { userAuthStore } from "@/store/user-auth-store";
 import type { UserType } from "@/Types";
 import { toast } from "sonner";
-import { getFreelancerOwnDataById, updateFreelancerProfileImage } from "@/api-functions/freelancer-functions";
+import {
+    getFreelancerOwnData,
+    updateFreelancerProfileImage,
+} from "@/api-functions/freelancer-functions";
 
 const FreelancerProfilePage = () => {
     const queryClient = useQueryClient();
@@ -15,7 +18,7 @@ const FreelancerProfilePage = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const { data, isLoading, isError } = useQuery({
-        queryFn: getFreelancerOwnDataById,
+        queryFn: getFreelancerOwnData,
         queryKey: ["get-freelancer-own-profile-data"],
     });
 

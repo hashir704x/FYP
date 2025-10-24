@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import ProjectCard from "@/components/Project-card";
 
-const AllProjectsPage = () => {
+const AllProjectsClientPage = () => {
     const { data, isLoading, isError } = useQuery({
         queryFn: getAllProjectsForClient,
-        queryKey: ["get-all-projects"],
+        queryKey: ["get-all-projects-for-client"],
     });
 
     return (
@@ -59,4 +59,4 @@ const AllProjectsPage = () => {
     );
 };
 
-export default AllProjectsPage;
+export default AllProjectsClientPage;

@@ -3,10 +3,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import ProjectDetailsInfoSection from "@/components/Project-details-info-section";
-import ProjectDetailsFreelancerSection from "@/components/Project-details-freelancers-section";
-
-const ProjectDetailsPage = () => {
+import ProjectDetailsInfoSection from "./Project-details-info-section";
+import ProjectDetailsFreelancerSection from "./Project-details-freelancers-section";
+const ProjectDetailsClientPage = () => {
     const { projectId } = useParams();
 
     const { data, isLoading, isError } = useQuery({
@@ -99,6 +98,7 @@ const ProjectDetailsPage = () => {
                                 {data.required_skills.length} skills required
                             </span>
                         </div>
+                        
                     </div>
 
                     {activeOption === "info" && (
@@ -117,4 +117,4 @@ const ProjectDetailsPage = () => {
     );
 };
 
-export default ProjectDetailsPage;
+export default ProjectDetailsClientPage;

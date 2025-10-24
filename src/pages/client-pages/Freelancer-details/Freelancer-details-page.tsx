@@ -5,7 +5,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 import { Briefcase, Sparkles } from "lucide-react";
 
-import ShowProjectsForInvitationsSidebar from "@/components/Show-projects-for-invitations-sidebar";
+import ShowProjectsForInvitationsSidebar from "@/pages/client-pages/Freelancer-details/Show-projects-for-invitations-sidebar";
 
 const FreelancerDetailsPage = () => {
     const { freelancerId } = useParams();

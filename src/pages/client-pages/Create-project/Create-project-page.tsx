@@ -28,7 +28,7 @@ const CreateProjectPage = () => {
             setDesc("");
             setBudget(0);
             setSkills([]);
-            queryClient.invalidateQueries({ queryKey: ["get-all-projects"] });
+            queryClient.invalidateQueries({ queryKey: ["get-all-projects-for-client"] });
             navigate(`/client/project-details/${projectId}`);
         },
         onError: (error) => {

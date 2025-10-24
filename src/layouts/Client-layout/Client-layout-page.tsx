@@ -1,16 +1,16 @@
 import { userAuthStore } from "@/store/user-auth-store";
 import { Navigate, Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import FreelancerSidebar from "@/components/Freelancer-sidebar";
+import ClientSidebar from "@/layouts/Client-layout/Client-sidebar";
 
-const FreelancerLayout = () => {
+const ClientLayoutPage = () => {
     const user = userAuthStore((state) => state.user);
     if (!user) return <Navigate to="/login" />;
-    else if (user.role === "client") return <Navigate to="/client" />;
+    else if (user.role === "freelancer") return <Navigate to="/freelancer" />;
     return (
         <div>
             <SidebarProvider>
-                <FreelancerSidebar />
+                <ClientSidebar />
                 <div className="w-full">
                     <Outlet />
                 </div>
@@ -19,4 +19,4 @@ const FreelancerLayout = () => {
     );
 };
 
-export default FreelancerLayout;
+export default ClientLayoutPage;

@@ -45,10 +45,7 @@ const FreelancerInvitationCard = (props: InvitationsForFreelancerFromBackendType
                 </div>
 
                 <div className="flex flex-wrap justify-center md:justify-end gap-3 pt-2">
-                    {/* <Button variant="custom">Accept</Button>
-                    <Button variant="destructive" className="cursor-pointer">
-                        Reject
-                    </Button> */}
+                   
                     <FreelancerConfirmInvitationDialog
                         action="accept"
                         freelancerId={props.freelancer_id}

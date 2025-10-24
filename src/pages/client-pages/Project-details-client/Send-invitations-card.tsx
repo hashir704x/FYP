@@ -2,7 +2,7 @@ import { deleteInvitation } from "@/api-functions/project-invitations-functions"
 import { Button } from "@/components/ui/button";
 import type { InvitationsForProjectFromBackendType } from "@/Types";
 import { useMutation } from "@tanstack/react-query";
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -13,7 +13,7 @@ const SendInvitationsCard = (props: InvitationsForProjectFromBackendType) => {
         onSuccess: () => {
             toast.success("Invitation canceled successfully");
             queryClient.invalidateQueries({
-                queryKey: [, props.project_id],
+                queryKey: ["get-invited-freelancers", props.project_id],
             });
         },
         onError: () => {

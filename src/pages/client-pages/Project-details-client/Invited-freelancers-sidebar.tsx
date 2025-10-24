@@ -1,5 +1,7 @@
-import { getAllProjectsForClient } from "@/api-functions/project-functions";
-import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { getInvitationsForProject } from "@/api-functions/project-invitations-functions";
+import { useParams } from "react-router-dom";
+import SendInvitationsCard from "./Send-invitations-card";
 
 import {
     Sheet,
@@ -11,28 +13,28 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "./ui/button";
-import { Spinner } from "./ui/spinner";
+import { useQuery } from "@tanstack/react-query";
+import { Spinner } from "@/components/ui/spinner";
 import { BadgeAlert } from "lucide-react";
 
-import ShowProjectsForInvitationsCard from "./Show-projects-for-invitations-card";
+export default function InvitedFreelancersSidebar() {
+    const { projectId } = useParams();
 
-const ShowProjectsForInvitationsSidebar = () => {
     const { data, isLoading, isError } = useQuery({
-        queryFn: getAllProjectsForClient,
-        queryKey: ["get-all-projects"],
+        queryFn: () => getInvitationsForProject(projectId as string),
+        queryKey: ["get-invited-freelancers", projectId],
     });
 
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="custom">Invite Freelancer</Button>
+                <Button variant="custom">View Invitations</Button>
             </SheetTrigger>
             <SheetContent>
                 <SheetHeader>
-                    <SheetTitle>Your Projects</SheetTitle>
+                    <SheetTitle>Invited Freelancers</SheetTitle>
                     <SheetDescription>
-                        Select the project you want to invite this freelancer for.
+                        Changed your mind? Click cancel button to cancel any invitation.
                     </SheetDescription>
                 </SheetHeader>
 
@@ -45,7 +47,7 @@ const ShowProjectsForInvitationsSidebar = () => {
 
                     {isError && (
                         <div className="h-[calc(100vh-70px)] flex justify-center items-center w-full">
-                            <p>Error in getting projects!</p>
+                            <p>Error in getting invitations!</p>
                         </div>
                     )}
 
@@ -56,7 +58,7 @@ const ShowProjectsForInvitationsSidebar = () => {
                             </div>
 
                             <h3 className="text-lg font-semibold text-gray-700">
-                                No Project created yet
+                                No Invitations Yet
                             </h3>
                             <p className="text-sm mt-1 text-gray-500 max-w-[240px]">
                                 You have not invited any freelancers to this project yet.
@@ -65,12 +67,9 @@ const ShowProjectsForInvitationsSidebar = () => {
                     )}
 
                     {data && data.length >= 1 && (
-                        <div className="flex flex-col gap-5">
+                        <div>
                             {data.map((item) => (
-                                <ShowProjectsForInvitationsCard
-                                    key={item.project_id}
-                                    {...item}
-                                />
+                                <SendInvitationsCard key={item.id} {...item} />
                             ))}
                         </div>
                     )}
@@ -83,6 +82,4 @@ const ShowProjectsForInvitationsSidebar = () => {
             </SheetContent>
         </Sheet>
     );
-};
-
-export default ShowProjectsForInvitationsSidebar;
+}

@@ -1,7 +1,7 @@
 import { getAllFreelancers } from "@/api-functions/freelancer-functions";
 import { useQuery } from "@tanstack/react-query";
-import { Spinner } from "./ui/spinner";
-import FreelancerCard from "./Freelancer-card";
+import { Spinner } from "@/components/ui/spinner";
+import FreelancerCard from "@/components/Freelancer-card";
 import InvitedFreelancersSidebar from "./Invited-freelancers-sidebar";
 import { useEffect, useState } from "react";
 import type { FreelancerFromBackendType, ProjectDetailsTypeFromBackend } from "@/Types";
