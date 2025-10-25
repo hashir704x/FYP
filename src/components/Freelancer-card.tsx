@@ -2,6 +2,7 @@ import type { FreelancerFromBackendType } from "@/Types";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import InviteFreelancerConfirmDialog from "./Invite-freelancer-confirm-dialog";
+import { userAuthStore } from "@/store/user-auth-store";
 
 type PropsType = {
     freelancerData: FreelancerFromBackendType;
@@ -9,6 +10,7 @@ type PropsType = {
 };
 
 export default function FreelancerCard(props: PropsType) {
+    const user = userAuthStore((state) => state.user);
     return (
         <div
             className={`bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 p-4 flex flex-col w-[300px] justify-between ${
@@ -47,6 +49,8 @@ export default function FreelancerCard(props: PropsType) {
                     </span>
                 ))}
             </div>
+
+            {user && user.userId === props.freelancerData.id && <span>its me</span>}
 
             {/* Action Button */}
             <Link to={`/client/freelancer-details/${props.freelancerData.id}`}>

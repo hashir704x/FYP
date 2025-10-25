@@ -6,11 +6,12 @@ import { userAuthStore } from "@/store/user-auth-store";
 import type { UserType } from "@/Types";
 import { toast } from "sonner";
 import {
-    getFreelancerOwnData,
+    getFreelancerOwnDataById,
     updateFreelancerProfileImage,
 } from "@/api-functions/freelancer-functions";
 
 const FreelancerProfilePage = () => {
+
     const queryClient = useQueryClient();
     const user = userAuthStore((state) => state.user) as UserType;
     const setUser = userAuthStore((state) => state.setUser);
@@ -18,7 +19,7 @@ const FreelancerProfilePage = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const { data, isLoading, isError } = useQuery({
-        queryFn: getFreelancerOwnData,
+        queryFn: () => getFreelancerOwnDataById(user.userId),
         queryKey: ["get-freelancer-own-profile-data"],
     });
 

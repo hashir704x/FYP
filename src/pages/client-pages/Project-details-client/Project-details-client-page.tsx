@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import ProjectDetailsInfoSection from "./Project-details-info-section";
 import ProjectDetailsFreelancerSection from "./Project-details-freelancers-section";
+
 const ProjectDetailsClientPage = () => {
     const { projectId } = useParams();
 
@@ -37,8 +38,8 @@ const ProjectDetailsClientPage = () => {
 
             {data && (
                 <div className="max-w-5xl mx-auto px-6 xl:py-10 py-4">
+                   
                     {/* Project Header */}
-
                     <div className="mb-8 border-b border-gray-200 pb-6">
                         <div className="flex flex-col-reverse md:flex-row justify-between items-center">
                             <h1 className="text-4xl font-bold text-gray-900 mb-3 md:mb-0 tracking-tight">

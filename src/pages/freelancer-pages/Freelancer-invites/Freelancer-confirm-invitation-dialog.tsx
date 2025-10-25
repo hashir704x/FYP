@@ -35,6 +35,10 @@ export default function FreelancerConfirmInvitationDialog(props: PropsType) {
             queryClient.invalidateQueries({
                 queryKey: ["get-invitations-for-freelancer"],
             });
+
+            queryClient.invalidateQueries({
+                queryKey: ["get-all-projects-for-freelancer"],
+            });
         },
         onError: (error) => {
             console.error(error.message);

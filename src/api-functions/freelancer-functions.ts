@@ -35,10 +35,12 @@ export async function getFreelancerDataById(
     return data;
 }
 
-export async function getFreelancerOwnData(): Promise<FreelancerOwnDataFromBackendType> {
+export async function getFreelancerOwnDataById(
+    freelancerId: string
+): Promise<FreelancerOwnDataFromBackendType> {
     console.log("getFreelancerOwnDataById() called");
 
-    const { error, data } = await supabaseClient.from("freelancers").select("*").single();
+    const { error, data } = await supabaseClient.from("freelancers").select("*").eq("id", freelancerId).single();
 
     if (error) {
         console.error(

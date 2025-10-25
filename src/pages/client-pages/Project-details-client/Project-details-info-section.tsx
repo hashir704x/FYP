@@ -56,7 +56,7 @@ const ProjectDetailsInfoSection = (props: PropsType) => {
                         </Button>
                     </div>
                 ) : (
-                    <div className="flex items-center gap-5">
+                    <div className="flex flex-wrap justify-center items-center gap-6">
                         {props.projectData.project_freelancers_join_table.map((item) => (
                             <FreelancerCard
                                 key={item.freelancers.id}
@@ -67,6 +67,9 @@ const ProjectDetailsInfoSection = (props: PropsType) => {
                     </div>
                 )}
             </section>
+
+
+            {/* <div className="h-[500px]">Hashir</div> */}
         </section>
     );
 };
