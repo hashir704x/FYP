@@ -1,13 +1,10 @@
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { getFreelancerDataById } from "@/api-functions/freelancer-functions";
 import { Spinner } from "@/components/ui/spinner";
-
+import { useQuery } from "@tanstack/react-query";
 import { Briefcase, Sparkles } from "lucide-react";
+import { useParams } from "react-router-dom";
 
-import ShowProjectsForInvitationsSidebar from "@/pages/client-pages/Freelancer-details/Show-projects-for-invitations-sidebar";
-
-const FreelancerDetailsPage = () => {
+const FreelancerDetailsFreelancerPage = () => {
     const { freelancerId } = useParams();
 
     const { data, isLoading, isError } = useQuery({
@@ -29,33 +26,22 @@ const FreelancerDetailsPage = () => {
 
             {isError && (
                 <div className="h-[calc(100vh-70px)] flex justify-center items-center w-full">
-                    <p>Error in getting Freelancer detailed data</p>
+                    <p>Error in getting Freelancer profile data</p>
                 </div>
             )}
 
             {data && (
                 <div className="px-6 py-8 max-w-5xl mx-auto">
-                    {/* <div className="flex items-center  flex-col md:flex-row"> */}
                     <div className="flex flex-col sm:flex-row items-center gap-8 border-b border-gray-200 pb-8">
                         <img
                             src={data.profile_pic}
                             alt={`${data.username} profile`}
                             className="w-40 h-40 rounded-full object-cover shadow-md border-4 border-indigo-100"
                         />
-                        <div className="flex-1">
-                            <div className="flex items-center justify-between flex-col md:flex-row">
-                                <h1 className="text-4xl font-semibold text-gray-900">
-                                    {data.username}
-                                </h1>
-
-                                <div className="mt-2">
-                                    <ShowProjectsForInvitationsSidebar />
-                                </div>
-                            </div>
-                        </div>
+                        <h1 className="text-4xl font-semibold text-gray-900">
+                            {data.username}
+                        </h1>
                     </div>
-
-                    {/* </div> */}
 
                     {/* About Section */}
                     <section className="mt-8">
@@ -96,4 +82,4 @@ const FreelancerDetailsPage = () => {
     );
 };
 
-export default FreelancerDetailsPage;
+export default FreelancerDetailsFreelancerPage;

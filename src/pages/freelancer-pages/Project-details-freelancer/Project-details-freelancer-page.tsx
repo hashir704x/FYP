@@ -1,6 +1,6 @@
 import { getProjectById } from "@/api-functions/project-functions";
 import { Spinner } from "@/components/ui/spinner";
-import ProjectDetailsInfoSection from "@/pages/client-pages/Project-details-client/Project-details-info-section";
+import ProjectDetailsInfoSection from "@/components/Project-details-info-section";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -36,7 +36,7 @@ const ProjectDetailsFreelancerPage = () => {
 
             {data && (
                 <div className="max-w-5xl mx-auto px-6 xl:py-10 py-4">
-                    Project Header
+                    {/* Project Header */}
                     <div className="mb-8 border-b border-gray-200 pb-6">
                         <div className="flex flex-col-reverse md:flex-row justify-between items-center">
                             <h1 className="text-4xl font-bold text-gray-900 mb-3 md:mb-0 tracking-tight">
@@ -53,15 +53,7 @@ const ProjectDetailsFreelancerPage = () => {
                                 >
                                     Info
                                 </button>
-                                <button
-                                    onClick={() => setActiveOption("freelancers")}
-                                    className={`${
-                                        activeOption === "freelancers" &&
-                                        "bg-[var(--my-blue)] text-white"
-                                    } w-[90px] h-[40px] rounded-md cursor-pointer`}
-                                >
-                                    Freelancers
-                                </button>
+
                                 <button
                                     onClick={() => setActiveOption("milestones")}
                                     className={`${
@@ -98,7 +90,7 @@ const ProjectDetailsFreelancerPage = () => {
                         </div>
                     </div>
 
-                      {activeOption === "info" && (
+                    {activeOption === "info" && (
                         <ProjectDetailsInfoSection
                             projectData={data}
                             setActiveOption={setActiveOption}

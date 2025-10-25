@@ -1,4 +1,4 @@
-import type { FreelancerFromBackendType } from "@/Types";
+import type { FreelancerFromBackendType, UserType } from "@/Types";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 import InviteFreelancerConfirmDialog from "./Invite-freelancer-confirm-dialog";
@@ -10,7 +10,7 @@ type PropsType = {
 };
 
 export default function FreelancerCard(props: PropsType) {
-    const user = userAuthStore((state) => state.user);
+    const user = userAuthStore((state) => state.user) as UserType;
     return (
         <div
             className={`bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-200 p-4 flex flex-col w-[300px] justify-between ${
@@ -21,7 +21,7 @@ export default function FreelancerCard(props: PropsType) {
                 <img
                     src={props.freelancerData.profile_pic}
                     alt="profile-pic"
-                    className="w-[120px] rounded-full object-cover"
+                    className="w-32 h-32 rounded-full object-cover border-2 border-[var(--my-blue)]"
                 />
 
                 <div className="flex flex-col items-center font-semibold">
@@ -50,17 +50,31 @@ export default function FreelancerCard(props: PropsType) {
                 ))}
             </div>
 
-            {user && user.userId === props.freelancerData.id && <span>its me</span>}
+            {user.role === "freelancer" && user.userId === props.freelancerData.id ? (
+                <Link to="/freelancer/freelancer-profile">
+                    <Button
+                        variant="outline"
+                        className="mt-3 w-full hover:bg-gray-100 cursor-pointer"
+                    >
+                        View my profile
+                    </Button>
+                </Link>
+            ) : (
+                <Link
+                    to={`/${
+                        user.role === "client" ? "client" : "freelancer"
+                    }/freelancer-details/${props.freelancerData.id}`}
+                >
+                    <Button
+                        variant="outline"
+                        className="mt-3 w-full hover:bg-gray-100 cursor-pointer"
+                    >
+                        View Profile
+                    </Button>
+                </Link>
+            )}
 
             {/* Action Button */}
-            <Link to={`/client/freelancer-details/${props.freelancerData.id}`}>
-                <Button
-                    variant="outline"
-                    className="mt-3 w-full hover:bg-gray-100 cursor-pointer"
-                >
-                    View Profile
-                </Button>
-            </Link>
 
             {props.showInviteButton && (
                 <InviteFreelancerConfirmDialog freelancerId={props.freelancerData.id} />

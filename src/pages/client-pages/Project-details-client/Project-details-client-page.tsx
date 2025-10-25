@@ -3,7 +3,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import ProjectDetailsInfoSection from "./Project-details-info-section";
+import ProjectDetailsInfoSection from "../../../components/Project-details-info-section";
 import ProjectDetailsFreelancerSection from "./Project-details-freelancers-section";
 
 const ProjectDetailsClientPage = () => {

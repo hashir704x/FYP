@@ -28,8 +28,11 @@ const ClientProfilePage = lazy(
 const ViewFreelancersPage = lazy(
     () => import("@/pages/client-pages/View-freelancers/View-freelancers-page")
 );
-const FreelancerDetailsPage = lazy(
-    () => import("@/pages/client-pages/Freelancer-details/Freelancer-details-page")
+const FreelancerDetailsClientPage = lazy(
+    () =>
+        import(
+            "@/pages/client-pages/Freelancer-details-client/Freelancer-details-client-page"
+        )
 );
 
 // Freelancer Pages
@@ -53,6 +56,12 @@ const ProjectDetailsFreelancerPage = lazy(
     () =>
         import(
             "@/pages/freelancer-pages/Project-details-freelancer/Project-details-freelancer-page"
+        )
+);
+const FreelancerDetailsFreelancerPage = lazy(
+    () =>
+        import(
+            "@/pages/freelancer-pages/Freelancer-details-freelancer/Freelancer-details-freelancer-page"
         )
 );
 
@@ -99,7 +108,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "freelancer-details/:freelancerId",
-                element: <FreelancerDetailsPage />,
+                element: <FreelancerDetailsClientPage />,
             },
         ],
     },
@@ -127,6 +136,10 @@ const router = createBrowserRouter([
                 path: "project-details/:projectId",
                 element: <ProjectDetailsFreelancerPage />,
             },
+            {
+                path: "freelancer-details/:freelancerId",
+                element: <FreelancerDetailsFreelancerPage />
+            }
         ],
     },
 ]);
