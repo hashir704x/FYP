@@ -2,7 +2,6 @@ import { createChatAndInsertMessage } from "@/api-functions/chat-functions";
 
 import {
     AlertDialog,
-    // AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -11,12 +10,13 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MessageCircle, SendHorizonal } from "lucide-react";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+// import { useNavigate } from "react-router-dom";
 
 type PropsType = {
     showChatsDialog: boolean;
@@ -27,16 +27,24 @@ type PropsType = {
 };
 
 export default function ChatsDialog(props: PropsType) {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [message, setMessage] = useState("");
     const { mutate, isPending } = useMutation({
         mutationFn: createChatAndInsertMessage,
         onSuccess: (chatId) => {
             console.log("Chat created successfully", chatId);
-            navigate(`/client/chats?${chatId}`);
+            // navigate(`/client/chats?${chatId}`);
+            setMessage("");
+            props.setShowChatsDialog(false);
+            queryClient.invalidateQueries({
+                queryKey: ["get-chats-for-user", props.clientId],
+            });
+            toast.success("Message sent! You can view the chat on the messages page");
         },
         onError: (error) => {
             console.error("Error in creating chat and message", error.message);
+            toast.error("Something went wrong! Cannot send message");
         },
     });
 
@@ -70,8 +78,8 @@ export default function ChatsDialog(props: PropsType) {
                         onClick={() =>
                             mutate({
                                 message: message,
-                                senderId: props.clientId,
-                                receiverId: props.freelancerId,
+                                clientId: props.clientId,
+                                freelancerId: props.freelancerId,
                             })
                         }
                         disabled={isPending || !message.trim()}

@@ -2,9 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getFreelancerDataById } from "@/api-functions/freelancer-functions";
 import { Spinner } from "@/components/ui/spinner";
-
 import { Briefcase, MessageCircleMore, Sparkles } from "lucide-react";
-
 import ShowProjectsForInvitationsSidebar from "@/pages/client-pages/Freelancer-details-client/Show-projects-for-invitations-sidebar";
 import { Button } from "@/components/ui/button";
 import { getChatsForUser } from "@/api-functions/chat-functions";
@@ -28,11 +26,9 @@ const FreelancerDetailsClientPage = () => {
     const { mutate, isPending } = useMutation({
         mutationFn: getChatsForUser,
         onSuccess: (data) => {
-            const chatFound = data.find(
-                (chat) => chat.user_1 === freelancerId || chat.user_2 === freelancerId
-            );
-            console.log("chats", data)
-            if (chatFound) navigate("/client/chats");
+            const chatFound = data.find((chat) => chat.freelancer_id === freelancerId);
+            console.log("chats", data);
+            if (chatFound) navigate(`/client/chats?${chatFound.id}`);
             else {
                 console.log("pop up time");
                 setShowChatsDialog(true);
@@ -89,7 +85,13 @@ const FreelancerDetailsClientPage = () => {
 
                                     <Button
                                         disabled={isPending}
-                                        onClick={() => mutate(user.userId)}
+                                        onClick={() =>
+                                            mutate({
+                                                userId: user.userId,
+                                                userRole: user.role,
+                                                getDetails: false,
+                                            })
+                                        }
                                         variant="custom"
                                         className="w-full"
                                     >
