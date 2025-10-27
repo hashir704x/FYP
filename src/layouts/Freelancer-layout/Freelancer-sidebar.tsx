@@ -1,4 +1,12 @@
-import { CircleX, FolderKanban, Inbox, LogOut, MailQuestionMark, User } from "lucide-react";
+import {
+    CircleX,
+    FolderKanban,
+    Inbox,
+    LogOut,
+    MailQuestionMark,
+    MessageCircleMore,
+    User,
+} from "lucide-react";
 import { userAuthStore } from "@/store/user-auth-store";
 import { supabaseClient } from "@/Supabase-client";
 import { Link } from "react-router-dom";
@@ -16,7 +24,6 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
-
 
 // Menu items.
 const items = [
@@ -38,8 +45,13 @@ const items = [
     {
         title: "Invitations",
         url: "/freelancer/freelancer-invites",
-        icon: MailQuestionMark
-    }
+        icon: MailQuestionMark,
+    },
+    {
+        title: "Messages",
+        url: "/freelancer/chats",
+        icon: MessageCircleMore,
+    },
 ];
 
 export default function FreelancerSidebar() {

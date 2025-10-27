@@ -134,3 +134,10 @@ export type FreelancerProjectsFromBackendType = {
         created_at: string;
     };
 };
+
+export type ChatFromBackendType = {
+    id: string;
+    created_at: string;
+    user_1: string;
+    user_2: string;
+};

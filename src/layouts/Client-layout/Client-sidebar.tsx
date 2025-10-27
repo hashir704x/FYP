@@ -1,4 +1,13 @@
-import { CircleX, FilePlus, FolderKanban, HardHat, Inbox, LogOut, User } from "lucide-react";
+import {
+    CircleX,
+    FilePlus,
+    FolderKanban,
+    HardHat,
+    Inbox,
+    LogOut,
+    MessageCircleMore,
+    User,
+} from "lucide-react";
 import { userAuthStore } from "@/store/user-auth-store";
 import { supabaseClient } from "@/Supabase-client";
 import { Link } from "react-router-dom";
@@ -34,7 +43,7 @@ const items = [
         url: "/client/create-project",
         icon: FilePlus,
     },
-      {
+    {
         title: "My Profile",
         url: "/client/client-profile",
         icon: User,
@@ -42,8 +51,13 @@ const items = [
     {
         title: "View Freelancers",
         url: "/client/view-freelancers",
-        icon: HardHat
-    }
+        icon: HardHat,
+    },
+    {
+        title: "Messages",
+        url: "/client/chats",
+        icon: MessageCircleMore,
+    },
 ];
 
 export default function ClientSidebar() {

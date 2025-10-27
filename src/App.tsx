@@ -65,6 +65,9 @@ const FreelancerDetailsFreelancerPage = lazy(
         )
 );
 
+// common pages
+const ChatPage = lazy(() => import("@/pages/Chat-page"));
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -110,6 +113,10 @@ const router = createBrowserRouter([
                 path: "freelancer-details/:freelancerId",
                 element: <FreelancerDetailsClientPage />,
             },
+            {
+                path: "chats",
+                element: <ChatPage />,
+            },
         ],
     },
     {
@@ -138,8 +145,12 @@ const router = createBrowserRouter([
             },
             {
                 path: "freelancer-details/:freelancerId",
-                element: <FreelancerDetailsFreelancerPage />
-            }
+                element: <FreelancerDetailsFreelancerPage />,
+            },
+            {
+                path: "chats",
+                element: <ChatPage />,
+            },
         ],
     },
 ]);

@@ -1,19 +1,52 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getFreelancerDataById } from "@/api-functions/freelancer-functions";
 import { Spinner } from "@/components/ui/spinner";
 
-import { Briefcase, Sparkles } from "lucide-react";
+import { Briefcase, MessageCircleMore, Sparkles } from "lucide-react";
 
 import ShowProjectsForInvitationsSidebar from "@/pages/client-pages/Freelancer-details-client/Show-projects-for-invitations-sidebar";
+import { Button } from "@/components/ui/button";
+import { getChatsForUser } from "@/api-functions/chat-functions";
+import { userAuthStore } from "@/store/user-auth-store";
+import type { UserType } from "@/Types";
+import { toast } from "sonner";
+import { useState } from "react";
+import ChatsDialog from "./Chat-dialog";
 
 const FreelancerDetailsClientPage = () => {
     const { freelancerId } = useParams();
+    const navigate = useNavigate();
+    const user = userAuthStore((state) => state.user) as UserType;
+    const [showChatsDialog, setShowChatsDialog] = useState(false);
 
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getFreelancerDataById(freelancerId as string),
         queryKey: ["get-freelancer-details", freelancerId],
     });
+
+    const { isFetching: chatsFetching, refetch: fetchChats } = useQuery({
+        queryFn: () => getChatsForUser(user.userId),
+        queryKey: ["get-chats-for-user", user.userId],
+        enabled: false,
+    });
+
+    async function checkChats() {
+        const { data, isError } = await fetchChats();
+        if (isError || !data) {
+            toast.error("Something went wrong, Cannot get chats data");
+            return;
+        }
+        const chatFound = data.find(
+            (chat) => chat.user_1 === freelancerId || chat.user_2 === freelancerId
+        );
+
+        if (chatFound) navigate("/client/chats");
+        else {
+            console.log("pop up time");
+            setShowChatsDialog(true);
+        }
+    }
 
     return (
         <div>
@@ -35,6 +68,11 @@ const FreelancerDetailsClientPage = () => {
 
             {data && (
                 <div className="px-6 py-8 max-w-5xl mx-auto">
+                    <ChatsDialog
+                        showChatsDialog={showChatsDialog}
+                        setShowChatsDialog={setShowChatsDialog}
+                        freelancerName={data.username}
+                    />
                     {/* <div className="flex items-center  flex-col md:flex-row"> */}
                     <div className="flex flex-col sm:flex-row items-center gap-8 border-b border-gray-200 pb-8">
                         <img
@@ -48,8 +86,18 @@ const FreelancerDetailsClientPage = () => {
                                     {data.username}
                                 </h1>
 
-                                <div className="mt-2">
+                                <div className="mt-2 flex flex-col items-center gap-3">
                                     <ShowProjectsForInvitationsSidebar />
+
+                                    <Button
+                                        disabled={chatsFetching}
+                                        onClick={checkChats}
+                                        variant="custom"
+                                        className="w-full"
+                                    >
+                                        <MessageCircleMore />
+                                        Send message
+                                    </Button>
                                 </div>
                             </div>
                         </div>
