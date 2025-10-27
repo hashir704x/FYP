@@ -1,6 +1,8 @@
+import { createChatAndInsertMessage } from "@/api-functions/chat-functions";
+
 import {
     AlertDialog,
-    AlertDialogAction,
+    // AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -9,38 +11,36 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { MessageCircle, SendHorizonal } from "lucide-react";
 import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
+import { useNavigate } from "react-router-dom";
 
 type PropsType = {
     showChatsDialog: boolean;
     setShowChatsDialog: React.Dispatch<React.SetStateAction<boolean>>;
     freelancerName: string;
+    freelancerId: string;
+    clientId: string;
 };
 
 export default function ChatsDialog(props: PropsType) {
+    const navigate = useNavigate();
     const [message, setMessage] = useState("");
+    const { mutate, isPending } = useMutation({
+        mutationFn: createChatAndInsertMessage,
+        onSuccess: (chatId) => {
+            console.log("Chat created successfully", chatId);
+            navigate(`/client/chats?${chatId}`);
+        },
+        onError: (error) => {
+            console.error("Error in creating chat and message", error.message);
+        },
+    });
 
-    function handleSend() {}
     return (
-        // <AlertDialog open={props.showChatsDialog} onOpenChange={props.setShowChatsDialog}>
-        //     <AlertDialogContent>
-        //         <AlertDialogHeader>
-        //             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-        //             <AlertDialogDescription>
-        //                 Do you really want to invite this freelancer to add into your
-        //                 project?
-        //             </AlertDialogDescription>
-        //         </AlertDialogHeader>
-        //         <AlertDialogFooter>
-        //             <AlertDialogCancel>Cancel</AlertDialogCancel>
-        //             <AlertDialogAction className="bg-[var(--my-blue)] hover:bg-[var(--my-blue-light)] cursor-pointer">
-        //                 Confirm
-        //             </AlertDialogAction>
-        //         </AlertDialogFooter>
-        //     </AlertDialogContent>
-        // </AlertDialog>
-
         <AlertDialog open={props.showChatsDialog} onOpenChange={props.setShowChatsDialog}>
             <AlertDialogContent className="sm:max-w-md">
                 <AlertDialogHeader>
@@ -54,7 +54,7 @@ export default function ChatsDialog(props: PropsType) {
                 </AlertDialogHeader>
 
                 <div className="mt-3">
-                    <textarea
+                    <Textarea
                         placeholder="Type your message..."
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
@@ -67,12 +67,17 @@ export default function ChatsDialog(props: PropsType) {
                         Cancel
                     </AlertDialogCancel>
                     <Button
-                        onClick={handleSend}
-                        // disabled={loading || !message.trim()}
+                        onClick={() =>
+                            mutate({
+                                message: message,
+                                senderId: props.clientId,
+                                receiverId: props.freelancerId,
+                            })
+                        }
+                        disabled={isPending || !message.trim()}
                         className="flex items-center gap-2 bg-[var(--my-blue)] hover:bg-[var(--my-blue-light)] px-5 py-2 rounded-lg"
                     >
-                        {/* {loading ? "Sending..." : "Send"} */}
-                        <SendHorizonal className="w-4 h-4" />
+                        {isPending ? <Spinner /> : <SendHorizonal className="w-4 h-4" />}
                     </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>

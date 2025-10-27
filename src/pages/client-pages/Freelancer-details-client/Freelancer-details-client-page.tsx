@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getFreelancerDataById } from "@/api-functions/freelancer-functions";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -25,28 +25,24 @@ const FreelancerDetailsClientPage = () => {
         queryKey: ["get-freelancer-details", freelancerId],
     });
 
-    const { isFetching: chatsFetching, refetch: fetchChats } = useQuery({
-        queryFn: () => getChatsForUser(user.userId),
-        queryKey: ["get-chats-for-user", user.userId],
-        enabled: false,
-    });
-
-    async function checkChats() {
-        const { data, isError } = await fetchChats();
-        if (isError || !data) {
+    const { mutate, isPending } = useMutation({
+        mutationFn: getChatsForUser,
+        onSuccess: (data) => {
+            const chatFound = data.find(
+                (chat) => chat.user_1 === freelancerId || chat.user_2 === freelancerId
+            );
+            console.log("chats", data)
+            if (chatFound) navigate("/client/chats");
+            else {
+                console.log("pop up time");
+                setShowChatsDialog(true);
+            }
+        },
+        onError: (error) => {
             toast.error("Something went wrong, Cannot get chats data");
-            return;
-        }
-        const chatFound = data.find(
-            (chat) => chat.user_1 === freelancerId || chat.user_2 === freelancerId
-        );
-
-        if (chatFound) navigate("/client/chats");
-        else {
-            console.log("pop up time");
-            setShowChatsDialog(true);
-        }
-    }
+            console.error(error.message);
+        },
+    });
 
     return (
         <div>
@@ -72,8 +68,10 @@ const FreelancerDetailsClientPage = () => {
                         showChatsDialog={showChatsDialog}
                         setShowChatsDialog={setShowChatsDialog}
                         freelancerName={data.username}
+                        clientId={user.userId}
+                        freelancerId={freelancerId as string}
                     />
-                    {/* <div className="flex items-center  flex-col md:flex-row"> */}
+
                     <div className="flex flex-col sm:flex-row items-center gap-8 border-b border-gray-200 pb-8">
                         <img
                             src={data.profile_pic}
@@ -90,8 +88,8 @@ const FreelancerDetailsClientPage = () => {
                                     <ShowProjectsForInvitationsSidebar />
 
                                     <Button
-                                        disabled={chatsFetching}
-                                        onClick={checkChats}
+                                        disabled={isPending}
+                                        onClick={() => mutate(user.userId)}
                                         variant="custom"
                                         className="w-full"
                                     >
