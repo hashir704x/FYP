@@ -18,7 +18,7 @@ const ClientProfilePage = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const { data, isLoading, isError } = useQuery({
-        queryFn: getClientProfileData,
+        queryFn: () => getClientProfileData(user.userId),
         queryKey: ["get-client-profile-data"],
     });
 

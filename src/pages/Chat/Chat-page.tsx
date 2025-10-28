@@ -2,36 +2,34 @@ import { getChatsForUser } from "@/api-functions/chat-functions";
 import { Spinner } from "@/components/ui/spinner";
 import { userAuthStore } from "@/store/user-auth-store";
 import { type ChatFromBackendType, type UserType } from "@/Types";
-// import { useQuery } from "@tanstack/react-query";
-import ChatDesktop from "./Chat-desktop";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import ChatListDesktop from "./Chat-list-desktop";
 import { useEffect, useState } from "react";
 import { supabaseClient } from "@/Supabase-client";
+import ChatWindow from "./Chat-window";
 
 const ChatPage = () => {
     const user = userAuthStore((state) => state.user) as UserType;
-    const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [chats, setChats] = useState<ChatFromBackendType[]>([]);
+    const queryClient = useQueryClient();
+    const {
+        data: chats,
+        isLoading,
+        isError,
+    } = useQuery({
+        queryFn: () =>
+            getChatsForUser({
+                userId: user.userId,
+                userRole: user.role,
+                getDetails: true,
+            }),
+        queryKey: ["get-chats-data", user.userId],
+    });
+
+    const [selectedChat, setSelectedChat] = useState<ChatFromBackendType | null>(null);
 
     useEffect(() => {
+        console.log("Subscribing chats channel");
         const column = user.role === "client" ? "client_id" : "freelancer_id";
-
-        (async function () {
-            setIsLoading(true);
-            try {
-                const response = await getChatsForUser({
-                    userId: user.userId,
-                    userRole: user.role,
-                    getDetails: true,
-                });
-                setChats(response);
-            } catch (error) {
-                console.error(error);
-                setIsError(true);
-            } finally {
-                setIsLoading(false);
-            }
-        })();
 
         const chatsChannel = supabaseClient
             .channel("chats")
@@ -39,23 +37,27 @@ const ChatPage = () => {
                 "postgres_changes",
                 {
                     event: "INSERT",
-                    schema: "public",   
+                    schema: "public",
                     table: "chats",
                     filter: `${column}=eq.${user.userId}`,
                 },
                 (payload) => {
                     console.log("chats payload", payload);
-                    setChats((prev) => [payload.new as ChatFromBackendType, ...prev]);
+                    queryClient.invalidateQueries({
+                        queryKey: ["get-chats-data", user.userId],
+                    });
                 }
             )
             .subscribe();
 
         return function () {
+            console.log("Unsubscribing chats channel");
             supabaseClient.removeChannel(chatsChannel);
+            queryClient.invalidateQueries({
+                queryKey: ["get-chats-data", user.userId],
+            });
         };
     }, []);
-
-    console.log("chatss:", chats);
 
     return (
         <div>
@@ -75,13 +77,19 @@ const ChatPage = () => {
                 </div>
             )}
 
-            {chats.length === 0 && <div>You have no chats right now</div>}
+            {chats && chats.length === 0 && <div>You have no chats right now</div>}
 
-            {chats.length >= 1 && (
+            {chats && chats.length >= 1 && (
                 <div>
                     <div className="hidden lg:block">
-                        <ChatDesktop chats={chats} />
+                        <ChatListDesktop
+                            chats={chats}
+                            selectedChatId={selectedChat ? selectedChat.id : null}
+                            setSelectedChat={setSelectedChat}
+                        />
                     </div>
+
+                    {selectedChat && <ChatWindow selectedChat={selectedChat} />}
                 </div>
             )}
         </div>

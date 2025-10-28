@@ -72,10 +72,8 @@ export async function createChatAndInsertMessage({
         );
         throw new Error(error.message);
     }
-    console.log("Chat data response:", data);
 
-    // inserting first message
-    const { data: messageResponse, error: messageError } = await supabaseClient
+    const { error: messageError } = await supabaseClient
         .from("messages")
         .insert([
             {
@@ -95,7 +93,5 @@ export async function createChatAndInsertMessage({
         );
         throw new Error(messageError.message);
     }
-
-    console.log("Message data response:", messageResponse);
     return data.id;
 }

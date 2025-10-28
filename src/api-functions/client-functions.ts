@@ -1,10 +1,15 @@
 import { supabaseClient } from "@/Supabase-client";
 import type { ClientProfileFromBackendType } from "@/Types";
 
-export async function getClientProfileData(): Promise<ClientProfileFromBackendType> {
+export async function getClientProfileData(
+    clientId: string
+): Promise<ClientProfileFromBackendType> {
     console.log("getClientProfileData() called");
 
-    const { data, error } = await supabaseClient.from("clients").select("*").single();
+    const { data, error } = await supabaseClient
+        .from("clients")
+        .select("*")
+        .eq("id", clientId).single();
 
     if (error) {
         console.error("Error occurred in getClientProfileData function", error.message);
