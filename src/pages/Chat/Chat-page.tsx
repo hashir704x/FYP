@@ -7,6 +7,7 @@ import ChatListDesktop from "./Chat-list-desktop";
 import { useEffect, useState } from "react";
 import { supabaseClient } from "@/Supabase-client";
 import ChatWindow from "./Chat-window";
+import { MessageSquare } from "lucide-react";
 
 const ChatPage = () => {
     const user = userAuthStore((state) => state.user) as UserType;
@@ -80,7 +81,8 @@ const ChatPage = () => {
             {chats && chats.length === 0 && <div>You have no chats right now</div>}
 
             {chats && chats.length >= 1 && (
-                <div>
+                <div className="flex h-[calc(100vh-70px)]">
+                    {/* Chat List */}
                     <div className="hidden lg:block">
                         <ChatListDesktop
                             chats={chats}
@@ -89,7 +91,28 @@ const ChatPage = () => {
                         />
                     </div>
 
-                    {selectedChat && <ChatWindow selectedChat={selectedChat} />}
+                    {/* Chat Window / Empty State */}
+                    {selectedChat ? (
+                        <ChatWindow selectedChat={selectedChat} />
+                    ) : (
+                        <div className="flex-1 flex flex-col items-center justify-center text-center bg-gray-50">
+                            <div className="flex flex-col items-center space-y-4 max-w-sm px-6">
+                                <div className="p-6 bg-blue-100 rounded-full">
+                                    <MessageSquare className="w-10 h-10 text-blue-600" />
+                                </div>
+
+                                <h2 className="text-2xl font-semibold text-gray-700">
+                                    No chat selected
+                                </h2>
+
+                                <p className="text-gray-500 text-sm leading-relaxed">
+                                    Select a chat from the list to start messaging.
+                                    <br />
+                                    Your conversations will appear here.
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

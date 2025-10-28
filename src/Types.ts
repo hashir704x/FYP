@@ -146,3 +146,12 @@ export type ChatFromBackendType = {
         profile_pic: string;
     };
 };
+
+export type MessageFromBackendType = {
+    id: number;
+    created_at: string;
+    chat_id: string;
+    client_id: string;
+    freelancer_id: string;
+    message_text: string;
+};

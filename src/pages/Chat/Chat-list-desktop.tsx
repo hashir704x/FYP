@@ -6,7 +6,6 @@ import type { ChatFromBackendType } from "@/Types";
 type PropsType = {
     chats: ChatFromBackendType[];
     selectedChatId: string | null;
-    // onSelectChat: (chat: ChatFromBackendType) => void;
     setSelectedChat: React.Dispatch<React.SetStateAction<ChatFromBackendType | null>>
 };
 

@@ -1,5 +1,5 @@
 import { supabaseClient } from "@/Supabase-client";
-import { type ChatFromBackendType } from "@/Types";
+import { type ChatFromBackendType, type MessageFromBackendType } from "@/Types";
 
 export async function getChatsForUser({
     userId,
@@ -94,4 +94,23 @@ export async function createChatAndInsertMessage({
         throw new Error(messageError.message);
     }
     return data.id;
+}
+
+export async function getMessagesForChat(
+    chatId: string
+): Promise<MessageFromBackendType[]> {
+    console.log("getMessagesForChat() called");
+
+    const { data, error } = await supabaseClient
+        .from("messages")
+        .select("*")
+        .eq("chat_id", chatId)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+        console.error("Error occurred in getMessagesForChat function", error.message);
+        throw new Error(error.message);
+    }
+
+    return data;
 }
