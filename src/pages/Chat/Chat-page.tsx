@@ -26,7 +26,8 @@ const ChatPage = () => {
         queryKey: ["get-chats-data", user.userId],
     });
 
-    const [selectedChat, setSelectedChat] = useState<ChatFromBackendType | null>(null);
+    const [selectedChat, setSelectedChat] =
+        useState<ChatFromBackendType | null>(null);
 
     useEffect(() => {
         console.log("Subscribing chats channel");
@@ -47,7 +48,7 @@ const ChatPage = () => {
                     queryClient.invalidateQueries({
                         queryKey: ["get-chats-data", user.userId],
                     });
-                }
+                },
             )
             .subscribe();
 
@@ -78,7 +79,9 @@ const ChatPage = () => {
                 </div>
             )}
 
-            {chats && chats.length === 0 && <div>You have no chats right now</div>}
+            {chats && chats.length === 0 && (
+                <div>You have no chats right now</div>
+            )}
 
             {chats && chats.length >= 1 && (
                 <div className="flex h-[calc(100vh-70px)]">
@@ -86,14 +89,21 @@ const ChatPage = () => {
                     <div className="hidden lg:block">
                         <ChatListDesktop
                             chats={chats}
-                            selectedChatId={selectedChat ? selectedChat.id : null}
+                            selectedChatId={
+                                selectedChat ? selectedChat.id : null
+                            }
                             setSelectedChat={setSelectedChat}
                         />
                     </div>
 
                     {/* Chat Window / Empty State */}
                     {selectedChat ? (
-                        <ChatWindow selectedChat={selectedChat} />
+                        <ChatWindow
+                            key={selectedChat.id}
+                            selectedChat={selectedChat}
+                            userId={user.userId}
+                            userRole={user.role}
+                        />
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center text-center bg-gray-50">
                             <div className="flex flex-col items-center space-y-4 max-w-sm px-6">
@@ -106,7 +116,8 @@ const ChatPage = () => {
                                 </h2>
 
                                 <p className="text-gray-500 text-sm leading-relaxed">
-                                    Select a chat from the list to start messaging.
+                                    Select a chat from the list to start
+                                    messaging.
                                     <br />
                                     Your conversations will appear here.
                                 </p>

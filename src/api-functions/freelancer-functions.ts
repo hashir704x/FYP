@@ -4,7 +4,9 @@ import {
     type FreelancerOwnDataFromBackendType,
 } from "@/Types";
 
-export async function getAllFreelancers(): Promise<FreelancerFromBackendType[]> {
+export async function getAllFreelancers(): Promise<
+    FreelancerFromBackendType[]
+> {
     console.log("getAllFreelancers() called");
 
     const { data, error } = await supabaseClient
@@ -19,7 +21,7 @@ export async function getAllFreelancers(): Promise<FreelancerFromBackendType[]> 
 }
 
 export async function getFreelancerDataById(
-    freelancerId: string
+    freelancerId: string,
 ): Promise<FreelancerFromBackendType> {
     const { data, error } = await supabaseClient
         .from("freelancers")
@@ -36,16 +38,20 @@ export async function getFreelancerDataById(
 }
 
 export async function getFreelancerOwnDataById(
-    freelancerId: string
+    freelancerId: string,
 ): Promise<FreelancerOwnDataFromBackendType> {
     console.log("getFreelancerOwnDataById() called");
 
-    const { error, data } = await supabaseClient.from("freelancers").select("*").eq("id", freelancerId).single();
+    const { error, data } = await supabaseClient
+        .from("freelancers")
+        .select("*")
+        .eq("id", freelancerId)
+        .single();
 
     if (error) {
         console.error(
             "Error occurred in getFreelancerOwnDataById function",
-            error.message
+            error.message,
         );
         throw new Error(error.message);
     }
@@ -55,7 +61,7 @@ export async function getFreelancerOwnDataById(
 
 export async function updateFreelancerProfileImage(
     file: File,
-    freelancerId: string
+    freelancerId: string,
 ): Promise<string> {
     console.log("updateFreelancerProfileImage() called");
 

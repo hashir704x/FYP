@@ -30,19 +30,22 @@ export async function sendInvitation({
 }
 
 export async function getInvitationsForFreelancer(
-    freelancerId: string
+    freelancerId: string,
 ): Promise<InvitationsForFreelancerFromBackendType[]> {
     console.log("getInvitationsForFreelancer() called");
 
     const { error, data } = await supabaseClient
         .from("invitations")
         .select(
-            "id, project_id, client_id, freelancer_id, created_at, projects(project_id, project_title, project_description, required_skills), clients(id, email, username, profile_pic)"
+            "id, project_id, client_id, freelancer_id, created_at, projects(project_id, project_title, project_description, required_skills), clients(id, email, username, profile_pic)",
         )
         .eq("freelancer_id", freelancerId);
 
     if (error) {
-        console.error("Error getting invitations for freelancer:", error.message);
+        console.error(
+            "Error getting invitations for freelancer:",
+            error.message,
+        );
         throw new Error(error.message);
     }
 
@@ -50,14 +53,14 @@ export async function getInvitationsForFreelancer(
 }
 
 export async function getInvitationsForProject(
-    projectId: string
+    projectId: string,
 ): Promise<InvitationsForProjectFromBackendType[]> {
     console.log("getInvitationsForProject() called");
 
     const { data, error } = await supabaseClient
         .from("invitations")
         .select(
-            "id, created_at, project_id, freelancers(id, username, email, role, skills, profile_pic)"
+            "id, created_at, project_id, freelancers(id, username, email, role, skills, profile_pic)",
         )
         .eq("project_id", projectId);
 

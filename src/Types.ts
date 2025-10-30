@@ -154,4 +154,5 @@ export type MessageFromBackendType = {
     client_id: string;
     freelancer_id: string;
     message_text: string;
+    sender_role: "freelancer" | "client";
 };

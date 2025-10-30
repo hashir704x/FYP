@@ -1,4 +1,3 @@
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ChatFromBackendType } from "@/Types";
@@ -6,10 +5,16 @@ import type { ChatFromBackendType } from "@/Types";
 type PropsType = {
     chats: ChatFromBackendType[];
     selectedChatId: string | null;
-    setSelectedChat: React.Dispatch<React.SetStateAction<ChatFromBackendType | null>>
+    setSelectedChat: React.Dispatch<
+        React.SetStateAction<ChatFromBackendType | null>
+    >;
 };
 
-const ChatListDesktop = ({ chats, selectedChatId, setSelectedChat }: PropsType) => {
+const ChatListDesktop = ({
+    chats,
+    selectedChatId,
+    setSelectedChat,
+}: PropsType) => {
     return (
         <div className="w-72 border-r border-gray-200 flex flex-col">
             <ScrollArea className="flex-1">
@@ -23,7 +28,10 @@ const ChatListDesktop = ({ chats, selectedChatId, setSelectedChat }: PropsType) 
                             }`}
                         >
                             <Avatar>
-                                <AvatarImage src={chat.userDetails?.profile_pic} />
+                                <AvatarImage
+                                    src={chat.userDetails?.profile_pic}
+                                    className="object-cover"
+                                />
                                 <AvatarFallback>
                                     {chat.userDetails?.username?.[0]}
                                 </AvatarFallback>
@@ -34,7 +42,8 @@ const ChatListDesktop = ({ chats, selectedChatId, setSelectedChat }: PropsType) 
                                     {chat.userDetails?.username}
                                 </div>
                                 <div className="text-sm text-gray-500 truncate">
-                                    Click to chat with {chat.userDetails?.username}
+                                    Click to chat with{" "}
+                                    {chat.userDetails?.username}
                                 </div>
                             </div>
                         </div>
