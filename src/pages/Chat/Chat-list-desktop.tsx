@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { chatsStore } from "@/store/chats-store";
 import type { ChatFromBackendType } from "@/Types";
 
 type PropsType = {
@@ -15,6 +16,7 @@ const ChatListDesktop = ({
     selectedChatId,
     setSelectedChat,
 }: PropsType) => {
+    // const removeUnreadChatId = chatsStore((state) => state.);
     return (
         <div className="w-72 border-r border-gray-200 flex flex-col">
             <ScrollArea className="flex-1">

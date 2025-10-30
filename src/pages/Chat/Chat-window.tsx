@@ -37,7 +37,6 @@ const ChatWindow = (props: PropsType) => {
                 );
                 setMessages(messagesData);
 
-                // Subscribe to new messages
                 channel = supabaseClient
                     .channel(`chat_${props.selectedChat.id}`)
                     .on(
@@ -64,6 +63,7 @@ const ChatWindow = (props: PropsType) => {
         })();
 
         return function () {
+            console.log("Unsubscribing chat window channel");
             if (channel) supabaseClient.removeChannel(channel);
         };
     }, []);

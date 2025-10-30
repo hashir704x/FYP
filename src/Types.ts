@@ -16,6 +16,14 @@ export type UserAuthStoreType = {
     reset: () => void;
 };
 
+export type ChatsStoreType = {
+    activeChatId: string | null;
+    unreadChatsIds: string[];
+    setActiveChatId: (chatId: string) => void;
+    addUnreadChatId: (chatId: string) => void;
+    removeUnreadChatId: (chatId: string) => void;
+};
+
 export type CreateProjectType = {
     project_title: string;
     project_description: string;

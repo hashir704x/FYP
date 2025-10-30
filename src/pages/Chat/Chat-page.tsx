@@ -8,9 +8,12 @@ import { useEffect, useState } from "react";
 import { supabaseClient } from "@/Supabase-client";
 import ChatWindow from "./Chat-window";
 import { MessageSquare } from "lucide-react";
+import { chatsStore } from "@/store/chats-store";
 
 const ChatPage = () => {
     const user = userAuthStore((state) => state.user) as UserType;
+    const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
+    console.log("unread chats:", unreadChatsIds);
     const queryClient = useQueryClient();
     const {
         data: chats,
