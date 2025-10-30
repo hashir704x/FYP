@@ -25,6 +25,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
+import { chatsStore } from "@/store/chats-store";
 
 // Menu items.
 const items = [
@@ -63,10 +64,13 @@ const items = [
 export default function ClientSidebar() {
     const { toggleSidebar } = useSidebar();
     const resetUser = userAuthStore((state) => state.reset);
+    const clearChatsData = chatsStore((state) => state.clearChatsData);
+    const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
     const queryClient = useQueryClient();
 
     async function handleLogout() {
         resetUser();
+        clearChatsData();
         await supabaseClient.auth.signOut();
         queryClient.clear();
     }
@@ -76,8 +80,13 @@ export default function ClientSidebar() {
             <Sidebar className="border-none">
                 <SidebarHeader>
                     <div className="flex justify-between items-center">
-                        <span className="font-semibold text-xl">Freelansync</span>{" "}
-                        <CircleX className="md:hidden" onClick={toggleSidebar} />
+                        <span className="font-semibold text-xl">
+                            Freelansync
+                        </span>{" "}
+                        <CircleX
+                            className="md:hidden"
+                            onClick={toggleSidebar}
+                        />
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
@@ -88,9 +97,28 @@ export default function ClientSidebar() {
                                 {items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
                                         <SidebarMenuButton asChild>
-                                            <Link to={item.url}>
+                                            {/*<Link to={item.url}>
                                                 <item.icon />
                                                 <span>{item.title}</span>
+                                            </Link>*/}
+
+                                            <Link to={item.url}>
+                                                <item.icon />
+                                                <span>
+                                                    {item.title}{" "}
+                                                    {item.title ===
+                                                        "Messages" &&
+                                                        unreadChatsIds.length >
+                                                            0 && (
+                                                            <span className="font-bold">
+                                                                (
+                                                                {
+                                                                    unreadChatsIds.length
+                                                                }
+                                                                )
+                                                            </span>
+                                                        )}
+                                                </span>
                                             </Link>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>

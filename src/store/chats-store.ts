@@ -5,9 +5,17 @@ import { type ChatsStoreType } from "@/Types";
 const chatsStore = create(
     persist<ChatsStoreType>(
         (set) => ({
-            activeChatId: null,
+            activeChat: null,
             unreadChatsIds: [],
-            setActiveChatId: (chatId) => set({ activeChatId: chatId }),
+            setActiveChat: (chat) =>
+                set((state) => ({
+                    activeChat: chat,
+                    unreadChatsIds: chat
+                        ? state.unreadChatsIds.filter(
+                              (item) => item !== chat.id,
+                          )
+                        : state.unreadChatsIds,
+                })),
             addUnreadChatId: (chatId) =>
                 set((state) => {
                     if (state.unreadChatsIds.includes(chatId)) return state;
@@ -16,12 +24,8 @@ const chatsStore = create(
                             unreadChatsIds: [...state.unreadChatsIds, chatId],
                         };
                 }),
-            removeUnreadChatId: (chatId) =>
-                set((state) => ({
-                    unreadChatsIds: state.unreadChatsIds.filter(
-                        (item) => item !== chatId,
-                    ),
-                })),
+
+            clearChatsData: () => set({ activeChat: null, unreadChatsIds: [] }),
         }),
         { name: "chats-store", storage: createJSONStorage(() => localStorage) },
     ),

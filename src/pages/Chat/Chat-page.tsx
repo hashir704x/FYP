@@ -1,10 +1,10 @@
 import { getChatsForUser } from "@/api-functions/chat-functions";
 import { Spinner } from "@/components/ui/spinner";
 import { userAuthStore } from "@/store/user-auth-store";
-import { type ChatFromBackendType, type UserType } from "@/Types";
+import { type UserType } from "@/Types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ChatListDesktop from "./Chat-list-desktop";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { supabaseClient } from "@/Supabase-client";
 import ChatWindow from "./Chat-window";
 import { MessageSquare } from "lucide-react";
@@ -13,7 +13,11 @@ import { chatsStore } from "@/store/chats-store";
 const ChatPage = () => {
     const user = userAuthStore((state) => state.user) as UserType;
     const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
+    const activeChat = chatsStore((state) => state.activeChat);
+    const setActiveChat = chatsStore((state) => state.setActiveChat);
+
     console.log("unread chats:", unreadChatsIds);
+
     const queryClient = useQueryClient();
     const {
         data: chats,
@@ -28,9 +32,6 @@ const ChatPage = () => {
             }),
         queryKey: ["get-chats-data", user.userId],
     });
-
-    const [selectedChat, setSelectedChat] =
-        useState<ChatFromBackendType | null>(null);
 
     useEffect(() => {
         console.log("Subscribing chats channel");
@@ -61,6 +62,8 @@ const ChatPage = () => {
             queryClient.invalidateQueries({
                 queryKey: ["get-chats-data", user.userId],
             });
+
+            setActiveChat(null);
         };
     }, []);
 
@@ -90,20 +93,13 @@ const ChatPage = () => {
                 <div className="flex h-[calc(100vh-70px)]">
                     {/* Chat List */}
                     <div className="hidden lg:block">
-                        <ChatListDesktop
-                            chats={chats}
-                            selectedChatId={
-                                selectedChat ? selectedChat.id : null
-                            }
-                            setSelectedChat={setSelectedChat}
-                        />
+                        <ChatListDesktop chats={chats} />
                     </div>
 
                     {/* Chat Window / Empty State */}
-                    {selectedChat ? (
+                    {activeChat ? (
                         <ChatWindow
-                            key={selectedChat.id}
-                            selectedChat={selectedChat}
+                            key={activeChat.id}
                             userId={user.userId}
                             userRole={user.role}
                         />

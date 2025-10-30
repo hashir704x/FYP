@@ -7,7 +7,6 @@ import { chatsStore } from "@/store/chats-store";
 const ChatGlobalListener = () => {
     const user = userAuthStore((state) => state.user) as UserType;
     const addUnreadChatId = chatsStore((state) => state.addUnreadChatId);
-    const activeChatId = chatsStore((state) => state.activeChatId);
 
     useEffect(() => {
         console.log("Subscribing to global chats channel");
@@ -22,13 +21,14 @@ const ChatGlobalListener = () => {
                 },
                 (payload) => {
                     console.log("message came, lets check");
+                    const activeChat = chatsStore.getState().activeChat;
 
                     if (
                         payload.new.client_id === user.userId ||
                         payload.new.freelancer_id === user.userId
                     ) {
                         const chatId = payload.new.chat_id;
-                        if (chatId !== activeChatId) {
+                        if (chatId !== activeChat?.id) {
                             addUnreadChatId(chatId);
                         }
                     }

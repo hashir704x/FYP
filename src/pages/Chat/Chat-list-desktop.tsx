@@ -5,51 +5,59 @@ import type { ChatFromBackendType } from "@/Types";
 
 type PropsType = {
     chats: ChatFromBackendType[];
-    selectedChatId: string | null;
-    setSelectedChat: React.Dispatch<
-        React.SetStateAction<ChatFromBackendType | null>
-    >;
 };
 
-const ChatListDesktop = ({
-    chats,
-    selectedChatId,
-    setSelectedChat,
-}: PropsType) => {
-    // const removeUnreadChatId = chatsStore((state) => state.);
+const ChatListDesktop = ({ chats }: PropsType) => {
+    const activeChat = chatsStore((state) => state.activeChat);
+    const setActiveChat = chatsStore((state) => state.setActiveChat);
+    const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
+
     return (
         <div className="w-72 border-r border-gray-200 flex flex-col">
             <ScrollArea className="flex-1">
                 <div className="flex flex-col">
-                    {chats.map((chat) => (
-                        <div
-                            key={chat.id}
-                            onClick={() => setSelectedChat(chat)}
-                            className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 ${
-                                selectedChatId === chat.id ? "bg-gray-100" : ""
-                            }`}
-                        >
-                            <Avatar>
-                                <AvatarImage
-                                    src={chat.userDetails?.profile_pic}
-                                    className="object-cover"
-                                />
-                                <AvatarFallback>
-                                    {chat.userDetails?.username?.[0]}
-                                </AvatarFallback>
-                            </Avatar>
+                    {chats.map((chat) => {
+                        const isUnread = unreadChatsIds.includes(chat.id);
+                        const isActive = activeChat?.id === chat.id;
 
-                            <div className="flex-1">
-                                <div className="font-medium">
-                                    {chat.userDetails?.username}
+                        return (
+                            <div
+                                key={chat.id}
+                                onClick={() => setActiveChat(chat)}
+                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer rounded-lg transition-colors
+                            ${isActive ? "bg-gray-200" : ""}
+                            ${isUnread && !isActive ? "bg-blue-50 hover:bg-blue-100" : "hover:bg-gray-50"}
+                          `}
+                            >
+                                <div className="relative">
+                                    <Avatar>
+                                        <AvatarImage
+                                            src={chat.userDetails?.profile_pic}
+                                            className="object-cover"
+                                        />
+                                        <AvatarFallback>
+                                            {chat.userDetails?.username?.[0]}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    {isUnread && !isActive && (
+                                        <span className="absolute top-0 -right-1 block w-3 h-3 bg-[var(--my-blue)] rounded-full ring-1 ring-white" />
+                                    )}
                                 </div>
-                                <div className="text-sm text-gray-500 truncate">
-                                    Click to chat with{" "}
-                                    {chat.userDetails?.username}
+
+                                <div className="flex-1">
+                                    <div
+                                        className={`font-medium ${isUnread && !isActive ? "font-semibold text-gray-900" : ""}`}
+                                    >
+                                        {chat.userDetails?.username}
+                                    </div>
+                                    <div className="text-sm text-gray-500 truncate">
+                                        Click to chat with{" "}
+                                        {chat.userDetails?.username}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </ScrollArea>
         </div>

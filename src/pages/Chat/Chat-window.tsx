@@ -1,5 +1,5 @@
 import { supabaseClient } from "@/Supabase-client";
-import type { ChatFromBackendType, MessageFromBackendType } from "@/Types";
+import type { MessageFromBackendType } from "@/Types";
 import {
     getMessagesForChat,
     sendMessage,
@@ -8,16 +8,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useState, useRef } from "react";
-import { Send } from "lucide-react"; // nice minimal icon
+import { Send } from "lucide-react";
+import { chatsStore } from "@/store/chats-store";
 
 type PropsType = {
-    selectedChat: ChatFromBackendType;
     userId: string;
     userRole: "client" | "freelancer";
 };
 
 const ChatWindow = (props: PropsType) => {
-    const { userDetails } = props.selectedChat;
+    const activeChat = chatsStore((state) => state.activeChat);
+
     const [isLoading, setIsLoading] = useState(false);
     const [messages, setMessages] = useState<MessageFromBackendType[]>([]);
     const [isError, setIsError] = useState(false);
@@ -29,38 +30,40 @@ const ChatWindow = (props: PropsType) => {
 
     useEffect(() => {
         let channel: RealtimeChannel;
-        (async function () {
-            try {
-                setIsLoading(true);
-                const messagesData = await getMessagesForChat(
-                    props.selectedChat.id,
-                );
-                setMessages(messagesData);
+        if (activeChat) {
+            (async function () {
+                try {
+                    setIsLoading(true);
+                    const messagesData = await getMessagesForChat(
+                        activeChat.id,
+                    );
+                    setMessages(messagesData);
 
-                channel = supabaseClient
-                    .channel(`chat_${props.selectedChat.id}`)
-                    .on(
-                        "postgres_changes",
-                        {
-                            event: "INSERT",
-                            schema: "public",
-                            table: "messages",
-                            filter: `chat_id=eq.${props.selectedChat.id}`,
-                        },
-                        (payload) => {
-                            const newMessage =
-                                payload.new as MessageFromBackendType;
-                            setMessages((prev) => [...prev, newMessage]);
-                        },
-                    )
-                    .subscribe();
-            } catch (error) {
-                console.error(error);
-                setIsError(true);
-            } finally {
-                setIsLoading(false);
-            }
-        })();
+                    channel = supabaseClient
+                        .channel(`chat_${activeChat.id}`)
+                        .on(
+                            "postgres_changes",
+                            {
+                                event: "INSERT",
+                                schema: "public",
+                                table: "messages",
+                                filter: `chat_id=eq.${activeChat.id}`,
+                            },
+                            (payload) => {
+                                const newMessage =
+                                    payload.new as MessageFromBackendType;
+                                setMessages((prev) => [...prev, newMessage]);
+                            },
+                        )
+                        .subscribe();
+                } catch (error) {
+                    console.error(error);
+                    setIsError(true);
+                } finally {
+                    setIsLoading(false);
+                }
+            })();
+        }
 
         return function () {
             console.log("Unsubscribing chat window channel");
@@ -68,7 +71,6 @@ const ChatWindow = (props: PropsType) => {
         };
     }, []);
 
-    // auto scroll to bottom
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -85,15 +87,17 @@ const ChatWindow = (props: PropsType) => {
         console.log("send:", inputValue);
 
         try {
-            setSendingMessageLoading(true);
-            await sendMessage(
-                props.selectedChat.id,
-                props.selectedChat.freelancer_id,
-                props.selectedChat.client_id,
-                props.userRole,
-                inputValue.trim(),
-            );
-            setInputValue("");
+            if (activeChat) {
+                setSendingMessageLoading(true);
+                await sendMessage(
+                    activeChat.id,
+                    activeChat.freelancer_id,
+                    activeChat.client_id,
+                    props.userRole,
+                    inputValue.trim(),
+                );
+                setInputValue("");
+            }
         } catch (error) {
             console.error(error);
         } finally {
@@ -103,25 +107,25 @@ const ChatWindow = (props: PropsType) => {
 
     return (
         <div className="flex flex-col w-full h-full bg-white shadow-sm overflow-hidden">
-            {/* --- Chat Header --- */}
-            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
-                <Avatar className="h-11 w-11 border">
-                    <AvatarImage
-                        src={userDetails?.profile_pic}
-                        alt={userDetails?.username}
-                        className="object-cover"
-                    />
-                    <AvatarFallback className="bg-gray-200 text-gray-600">
-                        {userDetails?.username?.[0]?.toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
+            {activeChat && activeChat.userDetails && (
+                <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
+                    <Avatar className="h-11 w-11 border">
+                        <AvatarImage
+                            src={activeChat.userDetails?.profile_pic}
+                            alt={activeChat.userDetails.username}
+                            className="object-cover"
+                        />
+                        <AvatarFallback className="bg-gray-200 text-gray-600">
+                            {activeChat.userDetails.username?.[0]?.toUpperCase()}
+                        </AvatarFallback>
+                    </Avatar>
 
-                <span className="font-semibold text-gray-900 text-lg">
-                    {userDetails?.username}
-                </span>
-            </div>
+                    <span className="font-semibold text-gray-900 text-lg">
+                        {activeChat.userDetails.username}
+                    </span>
+                </div>
+            )}
 
-            {/* --- Chat Messages --- */}
             <div className="flex-1 overflow-y-auto px-4 py-6 bg-gradient-to-b from-gray-50 to-white space-y-3 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                 {isLoading ? (
                     <div className="flex justify-center items-center h-full">
@@ -155,14 +159,6 @@ const ChatWindow = (props: PropsType) => {
                                     <p className="whitespace-pre-wrap break-words">
                                         {item.message_text}
                                     </p>
-                                    {/*<span className="text-[10px] opacity-70 block mt-1 text-right">
-                                        {new Date(
-                                            item.created_at,
-                                        ).toLocaleTimeString([], {
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                        })}
-                                    </span>*/}
                                 </div>
                             </div>
                         );
