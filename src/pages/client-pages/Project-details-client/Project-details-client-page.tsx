@@ -20,7 +20,7 @@ const ProjectDetailsClientPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b justify-center md:justify-start flex items-center">
                 Project Detials
             </h1>
 
@@ -38,7 +38,6 @@ const ProjectDetailsClientPage = () => {
 
             {data && (
                 <div className="max-w-5xl mx-auto px-6 xl:py-10 py-4">
-                   
                     {/* Project Header */}
                     <div className="mb-8 border-b border-gray-200 pb-6">
                         <div className="flex flex-col-reverse md:flex-row justify-between items-center">
@@ -57,7 +56,9 @@ const ProjectDetailsClientPage = () => {
                                     Info
                                 </button>
                                 <button
-                                    onClick={() => setActiveOption("freelancers")}
+                                    onClick={() =>
+                                        setActiveOption("freelancers")
+                                    }
                                     className={`${
                                         activeOption === "freelancers" &&
                                         "bg-[var(--my-blue)] text-white"
@@ -66,7 +67,9 @@ const ProjectDetailsClientPage = () => {
                                     Freelancers
                                 </button>
                                 <button
-                                    onClick={() => setActiveOption("milestones")}
+                                    onClick={() =>
+                                        setActiveOption("milestones")
+                                    }
                                     className={`${
                                         activeOption === "milestones" &&
                                         "bg-[var(--my-blue)] text-white"
@@ -80,11 +83,14 @@ const ProjectDetailsClientPage = () => {
                         <div className="flex flex-wrap items-center gap-6 text-gray-600 text-sm">
                             <span className="flex items-center gap-1">
                                 <span className="text-gray-400">📅</span>
-                                {new Date(data.created_at).toLocaleDateString("en-GB", {
-                                    day: "numeric",
-                                    month: "long",
-                                    year: "numeric",
-                                })}
+                                {new Date(data.created_at).toLocaleDateString(
+                                    "en-GB",
+                                    {
+                                        day: "numeric",
+                                        month: "long",
+                                        year: "numeric",
+                                    },
+                                )}
                             </span>
 
                             <span className="flex items-center gap-1">
@@ -99,7 +105,6 @@ const ProjectDetailsClientPage = () => {
                                 {data.required_skills.length} skills required
                             </span>
                         </div>
-                        
                     </div>
 
                     {activeOption === "info" && (

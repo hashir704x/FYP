@@ -13,7 +13,7 @@ const ChatListDesktop = ({ chats }: PropsType) => {
     const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
 
     return (
-        <div className="w-72 border-r border-gray-200 flex flex-col">
+        <div className="w-full h-full border-2 flex flex-col">
             <ScrollArea className="flex-1">
                 <div className="flex flex-col">
                     {chats.map((chat) => {
@@ -24,7 +24,7 @@ const ChatListDesktop = ({ chats }: PropsType) => {
                             <div
                                 key={chat.id}
                                 onClick={() => setActiveChat(chat)}
-                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer rounded-lg transition-colors
+                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer rounded-lg transition-colors border-b
                             ${isActive ? "bg-gray-200" : ""}
                             ${isUnread && !isActive ? "bg-blue-50 hover:bg-blue-100" : "hover:bg-gray-50"}
                           `}

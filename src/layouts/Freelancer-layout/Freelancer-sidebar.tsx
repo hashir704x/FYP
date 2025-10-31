@@ -92,7 +92,10 @@ export default function FreelancerSidebar() {
                                 {items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
                                         <SidebarMenuButton asChild>
-                                            <Link to={item.url}>
+                                            <Link
+                                                to={item.url}
+                                                onClick={toggleSidebar}
+                                            >
                                                 <item.icon />
                                                 <span>
                                                     {item.title}{" "}

@@ -28,7 +28,9 @@ const CreateProjectPage = () => {
             setDesc("");
             setBudget(0);
             setSkills([]);
-            queryClient.invalidateQueries({ queryKey: ["get-all-projects-for-client"] });
+            queryClient.invalidateQueries({
+                queryKey: ["get-all-projects-for-client"],
+            });
             navigate(`/client/project-details/${projectId}`);
         },
         onError: (error) => {
@@ -67,7 +69,7 @@ const CreateProjectPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] px-4 justify-center md:justify-start border-b flex items-center">
                 Create Project
             </h1>
             <div className="max-w-2xl mx-auto mt-8 shadow-[0px_4px_16px_rgba(17,17,26,0.1),_0px_8px_24px_rgba(17,17,26,0.1),_0px_16px_56px_rgba(17,17,26,0.1)] rounded-md p-6">
@@ -75,9 +77,15 @@ const CreateProjectPage = () => {
                     Create your new project
                 </h1>
 
-                <form onSubmit={handleCreateProject} className="bg-white space-y-5 mt-2">
+                <form
+                    onSubmit={handleCreateProject}
+                    className="bg-white space-y-5 mt-2"
+                >
                     <div className="flex flex-col space-y-2">
-                        <label htmlFor="title" className="font-medium text-gray-700">
+                        <label
+                            htmlFor="title"
+                            className="font-medium text-gray-700"
+                        >
                             Project Title
                         </label>
                         <input
@@ -91,7 +99,10 @@ const CreateProjectPage = () => {
                     </div>
 
                     <div className="flex flex-col space-y-2">
-                        <label htmlFor="desc" className="font-medium text-gray-700">
+                        <label
+                            htmlFor="desc"
+                            className="font-medium text-gray-700"
+                        >
                             Project Description
                         </label>
                         <textarea
@@ -112,7 +123,10 @@ const CreateProjectPage = () => {
                     </div>
 
                     <div className="flex flex-col space-y-2">
-                        <label htmlFor="budget" className="font-medium text-gray-700">
+                        <label
+                            htmlFor="budget"
+                            className="font-medium text-gray-700"
+                        >
                             Estimated Budget (min Rs 5000)
                         </label>
                         <input

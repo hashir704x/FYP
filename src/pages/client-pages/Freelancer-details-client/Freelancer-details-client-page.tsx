@@ -26,7 +26,9 @@ const FreelancerDetailsClientPage = () => {
     const { mutate, isPending } = useMutation({
         mutationFn: getChatsForUser,
         onSuccess: (data) => {
-            const chatFound = data.find((chat) => chat.freelancer_id === freelancerId);
+            const chatFound = data.find(
+                (chat) => chat.freelancer_id === freelancerId,
+            );
             console.log("chats", data);
             if (chatFound) navigate(`/client/chats?${chatFound.id}`);
             else {
@@ -42,7 +44,7 @@ const FreelancerDetailsClientPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b justify-center md:justify-start flex items-center">
                 Freelancer Detials
             </h1>
 

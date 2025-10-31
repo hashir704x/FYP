@@ -11,7 +11,7 @@ const ViewFreelancersPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] justify-center md:justify-start px-4 border-b flex items-center">
                 Freelancers
             </h1>
 

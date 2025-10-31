@@ -16,7 +16,7 @@ const FreelancerProjectsPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl justify-center md:justify-start font-semibold h-[70px] px-4 border-b flex items-center">
                 My Projects
             </h1>
 
@@ -38,7 +38,9 @@ const FreelancerProjectsPage = () => {
                         <div className="p-2 border bg-gray-200 rounded-lg">
                             <Folder size={25} fill="true" />
                         </div>
-                        <h2 className="text-xl font-medium mt-2">No Projects Yet</h2>
+                        <h2 className="text-xl font-medium mt-2">
+                            No Projects Yet
+                        </h2>
                         <p className="w-[320px] text-center mt-2 text-gray-500 font-medium">
                             You are not a part of any project yet.
                         </p>
@@ -49,7 +51,10 @@ const FreelancerProjectsPage = () => {
             {data && data.length >= 1 && (
                 <div className="flex p-4 gap-6 flex-wrap justify-center md:justify-start">
                     {data.map((item) => (
-                        <ProjectCard key={item.projects.project_id} {...item.projects} />
+                        <ProjectCard
+                            key={item.projects.project_id}
+                            {...item.projects}
+                        />
                     ))}
                 </div>
             )}

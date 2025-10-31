@@ -9,14 +9,13 @@ import { supabaseClient } from "@/Supabase-client";
 import ChatWindow from "./Chat-window";
 import { MessageSquare } from "lucide-react";
 import { chatsStore } from "@/store/chats-store";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ChatPage = () => {
     const user = userAuthStore((state) => state.user) as UserType;
-    const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
     const activeChat = chatsStore((state) => state.activeChat);
     const setActiveChat = chatsStore((state) => state.setActiveChat);
-
-    console.log("unread chats:", unreadChatsIds);
+    const isMobile = useIsMobile();
 
     const queryClient = useQueryClient();
     const {
@@ -69,7 +68,7 @@ const ChatPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] justify-center border-b flex items-center">
                 Chats
             </h1>
 
@@ -90,39 +89,107 @@ const ChatPage = () => {
             )}
 
             {chats && chats.length >= 1 && (
-                <div className="flex h-[calc(100vh-70px)]">
-                    {/* Chat List */}
-                    <div className="hidden lg:block">
-                        <ChatListDesktop chats={chats} />
-                    </div>
-
-                    {/* Chat Window / Empty State */}
-                    {activeChat ? (
-                        <ChatWindow
-                            key={activeChat.id}
-                            userId={user.userId}
-                            userRole={user.role}
-                        />
-                    ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center text-center bg-gray-50">
-                            <div className="flex flex-col items-center space-y-4 max-w-sm px-6">
-                                <div className="p-6 bg-blue-100 rounded-full">
-                                    <MessageSquare className="w-10 h-10 text-blue-600" />
+                <div>
+                    {isMobile ? (
+                        <div className="h-[calc(100vh-70px)]">
+                            {!activeChat ? (
+                                <div className="h-full ">
+                                    <ChatListDesktop chats={chats} />
                                 </div>
-
-                                <h2 className="text-2xl font-semibold text-gray-700">
-                                    No chat selected
-                                </h2>
-
-                                <p className="text-gray-500 text-sm leading-relaxed">
-                                    Select a chat from the list to start
-                                    messaging.
-                                    <br />
-                                    Your conversations will appear here.
-                                </p>
+                            ) : (
+                                <div className="h-full">
+                                    <ChatWindow
+                                        key={activeChat.id}
+                                        userId={user.userId}
+                                        userRole={user.role}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="h-[calc(100vh-70px)] flex">
+                            <div className="w-72 h-full">
+                                <ChatListDesktop chats={chats} />
                             </div>
+                            {activeChat ? (
+                                <ChatWindow
+                                    key={activeChat.id}
+                                    userId={user.userId}
+                                    userRole={user.role}
+                                />
+                            ) : (
+                                <div className="flex-1 flex flex-col items-center justify-center text-center bg-gray-50">
+                                    <div className="flex flex-col items-center space-y-4 max-w-sm px-6">
+                                        <div className="p-6 bg-blue-100 rounded-full">
+                                            <MessageSquare className="w-10 h-10 text-blue-600" />
+                                        </div>
+
+                                        <h2 className="text-2xl font-semibold text-gray-700">
+                                            No chat selected
+                                        </h2>
+
+                                        <p className="text-gray-500 text-sm leading-relaxed">
+                                            Select a chat from the list to start
+                                            messaging.
+                                            <br />
+                                            Your conversations will appear here.
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
+                    {/*Desktop view*/}
+                    {/*<div className="h-[calc(100vh-70px)] md:flex hidden">
+                        <div className="w-72 h-full">
+                            <ChatListDesktop chats={chats} />
+                        </div>
+                        {activeChat ? (
+                            // <ChatWindow
+                            //     key={activeChat.id}
+                            //     userId={user.userId}
+                            //     userRole={user.role}
+                            // />
+                            //
+                            <div></div>
+                        ) : (
+                            <div className="flex-1 flex flex-col items-center justify-center text-center bg-gray-50">
+                                <div className="flex flex-col items-center space-y-4 max-w-sm px-6">
+                                    <div className="p-6 bg-blue-100 rounded-full">
+                                        <MessageSquare className="w-10 h-10 text-blue-600" />
+                                    </div>
+
+                                    <h2 className="text-2xl font-semibold text-gray-700">
+                                        No chat selected
+                                    </h2>
+
+                                    <p className="text-gray-500 text-sm leading-relaxed">
+                                        Select a chat from the list to start
+                                        messaging.
+                                        <br />
+                                        Your conversations will appear here.
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>*/}
+
+                    {/*Mobile view*/}
+                    {/*<div className="md:hidden h-[calc(100vh-70px)]">
+                        {!activeChat ? (
+                            <div className="h-full ">
+                                <ChatListDesktop chats={chats} />
+                            </div>
+                        ) : (
+                            <div className="h-full">
+                                <ChatWindow
+                                    key={activeChat.id}
+                                    userId={user.userId}
+                                    userRole={user.role}
+                                />
+                            </div>
+                        )}
+                    </div>*/}
                 </div>
             )}
         </div>

@@ -15,7 +15,7 @@ const FreelancerInvitesPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl justify-center md:justify-start font-semibold h-[70px] px-4 border-b flex items-center">
                 Invitations
             </h1>
 

@@ -11,7 +11,6 @@ import {
 } from "@/api-functions/freelancer-functions";
 
 const FreelancerProfilePage = () => {
-
     const queryClient = useQueryClient();
     const user = userAuthStore((state) => state.user) as UserType;
     const setUser = userAuthStore((state) => state.setUser);
@@ -24,7 +23,8 @@ const FreelancerProfilePage = () => {
     });
 
     const { mutate, isPending } = useMutation({
-        mutationFn: (file: File) => updateFreelancerProfileImage(file, user.userId),
+        mutationFn: (file: File) =>
+            updateFreelancerProfileImage(file, user.userId),
         onSuccess: (newUrl) => {
             setUser({ ...user, profile_pic: newUrl });
             queryClient.invalidateQueries({
@@ -50,7 +50,7 @@ const FreelancerProfilePage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl justify-center md:justify-start font-semibold h-[70px] px-4 border-b flex items-center">
                 My Profile
             </h1>
 
@@ -116,22 +116,30 @@ const FreelancerProfilePage = () => {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
-                                    <p className="text-sm text-gray-500">Username</p>
+                                    <p className="text-sm text-gray-500">
+                                        Username
+                                    </p>
                                     <p className="text-lg font-semibold">
                                         {data.username}
                                     </p>
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
-                                    <p className="text-sm text-gray-500">Email</p>
+                                    <p className="text-sm text-gray-500">
+                                        Email
+                                    </p>
                                     <p className="text-lg font-semibold break-all">
                                         {data.email}
                                     </p>
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
-                                    <p className="text-sm text-gray-500">Role</p>
-                                    <p className="text-lg font-semibold">{data.role}</p>
+                                    <p className="text-sm text-gray-500">
+                                        Role
+                                    </p>
+                                    <p className="text-lg font-semibold">
+                                        {data.role}
+                                    </p>
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
@@ -144,7 +152,9 @@ const FreelancerProfilePage = () => {
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm sm:col-span-2">
-                                    <p className="text-sm text-gray-500 mb-3">Skillset</p>
+                                    <p className="text-sm text-gray-500 mb-3">
+                                        Skillset
+                                    </p>
 
                                     <div className="flex flex-wrap gap-2">
                                         {data.skills.map(
@@ -155,15 +165,19 @@ const FreelancerProfilePage = () => {
                                                 >
                                                     {skill}
                                                 </span>
-                                            )
+                                            ),
                                         )}
                                     </div>
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm sm:col-span-2">
-                                    <p className="text-sm text-gray-500">Joined On</p>
+                                    <p className="text-sm text-gray-500">
+                                        Joined On
+                                    </p>
                                     <p className="text-lg font-semibold">
-                                        {new Date(data.created_at).toLocaleDateString()}
+                                        {new Date(
+                                            data.created_at,
+                                        ).toLocaleDateString()}
                                     </p>
                                 </div>
                             </div>

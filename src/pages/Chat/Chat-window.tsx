@@ -32,6 +32,8 @@ const ChatWindow = (props: PropsType) => {
         let channel: RealtimeChannel;
         if (activeChat) {
             (async function () {
+                console.log("Subscribing chat window channel");
+
                 try {
                     setIsLoading(true);
                     const messagesData = await getMessagesForChat(
@@ -84,8 +86,6 @@ const ChatWindow = (props: PropsType) => {
 
     const handleSend = async () => {
         if (!inputValue.trim()) return;
-        console.log("send:", inputValue);
-
         try {
             if (activeChat) {
                 setSendingMessageLoading(true);
@@ -167,7 +167,6 @@ const ChatWindow = (props: PropsType) => {
                 <div ref={bottomRef} />
             </div>
 
-            {/* --- Input Area --- */}
             <div className="border-t border-gray-200 p-3 bg-gray-50">
                 <div className="flex items-center gap-2">
                     <input

@@ -20,7 +20,6 @@ const ChatGlobalListener = () => {
                     table: "messages",
                 },
                 (payload) => {
-                    console.log("message came, lets check");
                     const activeChat = chatsStore.getState().activeChat;
 
                     if (

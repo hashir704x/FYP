@@ -14,7 +14,7 @@ const AllProjectsClientPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] px-4 justify-center md:justify-start border-b flex items-center">
                 All Projects
             </h1>
 
@@ -35,10 +35,12 @@ const AllProjectsClientPage = () => {
                     <div className="p-2 border bg-gray-200 rounded-lg">
                         <Folder size={25} fill="true" />
                     </div>
-                    <h2 className="text-xl font-medium mt-2">No Projects Yet</h2>
+                    <h2 className="text-xl font-medium mt-2">
+                        No Projects Yet
+                    </h2>
                     <p className="w-[320px] text-center mt-2 text-gray-500 font-medium">
-                        You haven't created any projects yet. Get started by creating your
-                        first project.
+                        You haven't created any projects yet. Get started by
+                        creating your first project.
                     </p>
                     <Link to="/client/create-project">
                         <Button variant="custom" className="mt-4">

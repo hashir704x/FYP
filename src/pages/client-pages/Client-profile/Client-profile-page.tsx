@@ -49,7 +49,7 @@ const ClientProfilePage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] px-4 border-b flex justify-center md:justify-start items-center">
                 My Profile
             </h1>
 
@@ -115,22 +115,30 @@ const ClientProfilePage = () => {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
-                                    <p className="text-sm text-gray-500">Username</p>
+                                    <p className="text-sm text-gray-500">
+                                        Username
+                                    </p>
                                     <p className="text-lg font-semibold">
                                         {data.username}
                                     </p>
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
-                                    <p className="text-sm text-gray-500">Email</p>
+                                    <p className="text-sm text-gray-500">
+                                        Email
+                                    </p>
                                     <p className="text-lg font-semibold break-all">
                                         {data.email}
                                     </p>
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
-                                    <p className="text-sm text-gray-500">Role</p>
-                                    <p className="text-lg font-semibold">{data.role}</p>
+                                    <p className="text-sm text-gray-500">
+                                        Role
+                                    </p>
+                                    <p className="text-lg font-semibold">
+                                        {data.role}
+                                    </p>
                                 </div>
 
                                 <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 shadow-sm">
@@ -147,7 +155,9 @@ const ClientProfilePage = () => {
                                         Account Created On
                                     </p>
                                     <p className="text-lg font-semibold">
-                                        {new Date(data.created_at).toLocaleDateString()}
+                                        {new Date(
+                                            data.created_at,
+                                        ).toLocaleDateString()}
                                     </p>
                                 </div>
                             </div>
