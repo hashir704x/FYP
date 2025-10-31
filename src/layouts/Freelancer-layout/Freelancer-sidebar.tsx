@@ -25,6 +25,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Menu items.
 const items = [
@@ -56,10 +57,12 @@ const items = [
 ];
 
 export default function FreelancerSidebar() {
+    const isMobile = useIsMobile();
     const { toggleSidebar } = useSidebar();
     const resetUser = userAuthStore((state) => state.reset);
     const clearChatsData = chatsStore((state) => state.clearChatsData);
     const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
+    const setActiveChat = chatsStore((state) => state.setActiveChat);
 
     const queryClient = useQueryClient();
 
@@ -92,27 +95,40 @@ export default function FreelancerSidebar() {
                                 {items.map((item) => (
                                     <SidebarMenuItem key={item.title}>
                                         <SidebarMenuButton asChild>
-                                            <Link
-                                                to={item.url}
-                                                onClick={toggleSidebar}
-                                            >
-                                                <item.icon />
-                                                <span>
-                                                    {item.title}{" "}
-                                                    {item.title ===
-                                                        "Messages" &&
-                                                        unreadChatsIds.length >
-                                                            0 && (
-                                                            <span className="font-bold">
-                                                                (
-                                                                {
-                                                                    unreadChatsIds.length
-                                                                }
-                                                                )
-                                                            </span>
-                                                        )}
-                                                </span>
-                                            </Link>
+                                            {item.title !== "Messages" ? (
+                                                <Link
+                                                    to={item.url}
+                                                    onClick={() => {
+                                                        if (isMobile)
+                                                            toggleSidebar();
+                                                    }}
+                                                >
+                                                    <item.icon />{" "}
+                                                    <span>{item.title}</span>
+                                                </Link>
+                                            ) : (
+                                                <Link
+                                                    to={item.url}
+                                                    onClick={() => {
+                                                        setActiveChat(null);
+                                                        if (isMobile)
+                                                            toggleSidebar();
+                                                    }}
+                                                >
+                                                    <item.icon />
+                                                    {item.title}
+                                                    {unreadChatsIds.length >
+                                                        0 && (
+                                                        <span className="font-bold">
+                                                            (
+                                                            {
+                                                                unreadChatsIds.length
+                                                            }
+                                                            )
+                                                        </span>
+                                                    )}
+                                                </Link>
+                                            )}
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 ))}

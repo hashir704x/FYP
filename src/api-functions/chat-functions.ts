@@ -1,5 +1,9 @@
 import { supabaseClient } from "@/Supabase-client";
-import { type ChatFromBackendType, type MessageFromBackendType } from "@/Types";
+import {
+    type ChatFromBackendType,
+    type MessageFromBackendType,
+    type ProjectMessageFromBackendType,
+} from "@/Types";
 
 export async function getChatsForUser({
     userId,
@@ -20,17 +24,13 @@ export async function getChatsForUser({
         .eq(column, userId)
         .order("created_at", { ascending: false });
     if (error) {
-        console.error(
-            "Error occurred in getChatsForUser function",
-            error.message,
-        );
+        console.error("Error occurred in getChatsForUser function", error.message);
         throw new Error(error.message);
     }
 
     if (!getDetails) return data;
 
-    const otherUserColumn =
-        userRole === "client" ? "freelancer_id" : "client_id";
+    const otherUserColumn = userRole === "client" ? "freelancer_id" : "client_id";
     const otherUserIds = data.map((chat) => chat[otherUserColumn]);
     const otherUserTable = userRole === "client" ? "freelancers" : "clients";
 
@@ -39,17 +39,12 @@ export async function getChatsForUser({
         .select("id, username, profile_pic")
         .in("id", otherUserIds);
     if (usersError) {
-        console.error(
-            "Error occurred in getChatsForUser function",
-            usersError.message,
-        );
+        console.error("Error occurred in getChatsForUser function", usersError.message);
         throw new Error(usersError.message);
     }
 
     const chatsWithUserDetails = data.map((chat) => {
-        const userDetails = usersData.find(
-            (user) => user.id === chat[otherUserColumn],
-        );
+        const userDetails = usersData.find((user) => user.id === chat[otherUserColumn]);
         return { ...chat, userDetails };
     });
     return chatsWithUserDetails;
@@ -66,7 +61,6 @@ export async function createChatAndInsertMessage({
 }): Promise<string> {
     console.log("createChatAndInsertMessage() called");
 
-    // creating chat
     const { data, error } = await supabaseClient
         .from("chats")
         .insert([{ freelancer_id: freelancerId, client_id: clientId }])
@@ -76,7 +70,7 @@ export async function createChatAndInsertMessage({
     if (error) {
         console.error(
             "Error occurred in createChatAndInsertMessage function",
-            error.message,
+            error.message
         );
         throw new Error(error.message);
     }
@@ -98,7 +92,7 @@ export async function createChatAndInsertMessage({
     if (messageError) {
         console.error(
             "Error occurred in createChatAndInsertMessage function",
-            messageError.message,
+            messageError.message
         );
         throw new Error(messageError.message);
     }
@@ -106,7 +100,7 @@ export async function createChatAndInsertMessage({
 }
 
 export async function getMessagesForChat(
-    chatId: string,
+    chatId: string
 ): Promise<MessageFromBackendType[]> {
     console.log("getMessagesForChat() called");
 
@@ -117,10 +111,7 @@ export async function getMessagesForChat(
         .order("created_at", { ascending: true });
 
     if (error) {
-        console.error(
-            "Error occurred in getMessagesForChat function",
-            error.message,
-        );
+        console.error("Error occurred in getMessagesForChat function", error.message);
         throw new Error(error.message);
     }
 
@@ -132,7 +123,7 @@ export async function sendMessage(
     freelancerId: string,
     clientId: string,
     senderRole: "client" | "freelancer",
-    messageText: string,
+    messageText: string
 ): Promise<void> {
     console.log("sendMessage() called");
 
@@ -150,4 +141,23 @@ export async function sendMessage(
         console.error("Error occurred in sendMessage function", error.message);
         throw new Error(error.message);
     }
+}
+
+export async function getMessagesForProject(
+    projectId: string
+): Promise<ProjectMessageFromBackendType[]> {
+    console.log("getMessagesForProject() called");
+
+    const { error, data } = await supabaseClient
+        .from("project_messages")
+        .select("*")
+        .eq("project_id", projectId)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+        console.error("Error occurred in getMessagesForProject function", error.message);
+        throw new Error(error.message);
+    }
+
+    return data;
 }

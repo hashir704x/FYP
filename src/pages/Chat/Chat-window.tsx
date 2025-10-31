@@ -1,9 +1,6 @@
 import { supabaseClient } from "@/Supabase-client";
 import type { MessageFromBackendType } from "@/Types";
-import {
-    getMessagesForChat,
-    sendMessage,
-} from "@/api-functions/chat-functions";
+import { getMessagesForChat, sendMessage } from "@/api-functions/chat-functions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import type { RealtimeChannel } from "@supabase/supabase-js";
@@ -36,9 +33,7 @@ const ChatWindow = (props: PropsType) => {
 
                 try {
                     setIsLoading(true);
-                    const messagesData = await getMessagesForChat(
-                        activeChat.id,
-                    );
+                    const messagesData = await getMessagesForChat(activeChat.id);
                     setMessages(messagesData);
 
                     channel = supabaseClient
@@ -52,10 +47,9 @@ const ChatWindow = (props: PropsType) => {
                                 filter: `chat_id=eq.${activeChat.id}`,
                             },
                             (payload) => {
-                                const newMessage =
-                                    payload.new as MessageFromBackendType;
+                                const newMessage = payload.new as MessageFromBackendType;
                                 setMessages((prev) => [...prev, newMessage]);
-                            },
+                            }
                         )
                         .subscribe();
                 } catch (error) {
@@ -77,13 +71,6 @@ const ChatWindow = (props: PropsType) => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    if (isError)
-        return (
-            <div className="flex items-center justify-center h-full text-red-500">
-                Failed to load messages.
-            </div>
-        );
-
     const handleSend = async () => {
         if (!inputValue.trim()) return;
         try {
@@ -94,7 +81,7 @@ const ChatWindow = (props: PropsType) => {
                     activeChat.freelancer_id,
                     activeChat.client_id,
                     props.userRole,
-                    inputValue.trim(),
+                    inputValue.trim()
                 );
                 setInputValue("");
             }
@@ -104,6 +91,13 @@ const ChatWindow = (props: PropsType) => {
             setSendingMessageLoading(false);
         }
     };
+
+    if (isError)
+        return (
+            <div className="flex items-center justify-center h-full text-red-500">
+                Failed to load messages.
+            </div>
+        );
 
     return (
         <div className="flex flex-col w-full h-full bg-white shadow-sm overflow-hidden">
@@ -132,21 +126,16 @@ const ChatWindow = (props: PropsType) => {
                         <Spinner className="text-[var(--my-blue)] w-8 h-8" />
                     </div>
                 ) : messages.length === 0 ? (
-                    <div className="text-gray-400 text-center py-10">
-                        No messages yet
-                    </div>
+                    <div className="text-gray-400 text-center py-10">No messages yet</div>
                 ) : (
                     messages.map((item) => {
-                        const isSentByCurrentUser =
-                            props.userRole === item.sender_role;
+                        const isSentByCurrentUser = props.userRole === item.sender_role;
 
                         return (
                             <div
                                 key={item.id}
                                 className={`flex ${
-                                    isSentByCurrentUser
-                                        ? "justify-end"
-                                        : "justify-start"
+                                    isSentByCurrentUser ? "justify-end" : "justify-start"
                                 }`}
                             >
                                 <div

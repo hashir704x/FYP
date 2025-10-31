@@ -164,3 +164,12 @@ export type MessageFromBackendType = {
     message_text: string;
     sender_role: "freelancer" | "client";
 };
+
+export type ProjectMessageFromBackendType = {
+    id: number;
+    created_at: string;
+    project_id: string;
+    sender_id: string;
+    sender_username: string;
+    message_text: string;
+};

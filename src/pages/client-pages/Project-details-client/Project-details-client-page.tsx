@@ -2,11 +2,16 @@ import { getProjectById } from "@/api-functions/project-functions";
 import { Spinner } from "@/components/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ProjectDetailsInfoSection from "../../../components/Project-details-info-section";
 import ProjectDetailsFreelancerSection from "./Project-details-freelancers-section";
+import { Button } from "@/components/ui/button";
+import { MessageCircleMore } from "lucide-react";
+import { userAuthStore } from "@/store/user-auth-store";
+import type { UserType } from "@/Types";
 
 const ProjectDetailsClientPage = () => {
+    const user = userAuthStore((state) => state.user) as UserType;
     const { projectId } = useParams();
 
     const { data, isLoading, isError } = useQuery({
@@ -56,9 +61,7 @@ const ProjectDetailsClientPage = () => {
                                     Info
                                 </button>
                                 <button
-                                    onClick={() =>
-                                        setActiveOption("freelancers")
-                                    }
+                                    onClick={() => setActiveOption("freelancers")}
                                     className={`${
                                         activeOption === "freelancers" &&
                                         "bg-[var(--my-blue)] text-white"
@@ -67,9 +70,7 @@ const ProjectDetailsClientPage = () => {
                                     Freelancers
                                 </button>
                                 <button
-                                    onClick={() =>
-                                        setActiveOption("milestones")
-                                    }
+                                    onClick={() => setActiveOption("milestones")}
                                     className={`${
                                         activeOption === "milestones" &&
                                         "bg-[var(--my-blue)] text-white"
@@ -79,32 +80,36 @@ const ProjectDetailsClientPage = () => {
                                 </button>
                             </div>
                         </div>
-
                         <div className="flex flex-wrap items-center gap-6 text-gray-600 text-sm">
                             <span className="flex items-center gap-1">
                                 <span className="text-gray-400">📅</span>
-                                {new Date(data.created_at).toLocaleDateString(
-                                    "en-GB",
-                                    {
-                                        day: "numeric",
-                                        month: "long",
-                                        year: "numeric",
-                                    },
-                                )}
+                                {new Date(data.created_at).toLocaleDateString("en-GB", {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                })}
                             </span>
-
                             <span className="flex items-center gap-1">
                                 <span className="text-gray-400">💰</span>
                                 <span className="font-semibold text-gray-800">
                                     Rs {data.project_budget.toLocaleString()}
                                 </span>
                             </span>
-
                             <span className="flex items-center gap-1">
                                 <span className="text-gray-400">🧠</span>
                                 {data.required_skills.length} skills required
                             </span>
                         </div>
+
+                        <Link
+                            to={`/${
+                                user.role === "client" ? "client" : "freelancer"
+                            }/project-chat/${projectId}`}
+                        >
+                            <Button variant="custom" className="mt-5">
+                                <MessageCircleMore /> Open Chat
+                            </Button>
+                        </Link>
                     </div>
 
                     {activeOption === "info" && (

@@ -8,9 +8,7 @@ import type {
 
 import { deleteInvitation } from "./project-invitations-functions";
 
-export async function getAllProjectsForClient(): Promise<
-    ProjectsFromBackendType[]
-> {
+export async function getAllProjectsForClient(): Promise<ProjectsFromBackendType[]> {
     console.log("getAllProjectsForClient() called");
 
     const { data, error } = await supabaseClient
@@ -21,7 +19,7 @@ export async function getAllProjectsForClient(): Promise<
     if (error) {
         console.error(
             "Error occurred in getAllProjectsForClient function",
-            error.message,
+            error.message
         );
         throw new Error(error.message);
     }
@@ -29,28 +27,26 @@ export async function getAllProjectsForClient(): Promise<
 }
 
 export async function getAllProjectsForFreelancer(
-    freelancerId: string,
+    freelancerId: string
 ): Promise<FreelancerProjectsFromBackendType[]> {
     const { data, error } = await supabaseClient
         .from("project_freelancers_join_table")
         .select(
-            "projects(project_id, client_id, project_title, project_description, project_budget, created_at, project_status, required_skills)",
+            "projects(project_id, client_id, project_title, project_description, project_budget, created_at, project_status, required_skills)"
         )
         .order("created_at", { ascending: false })
         .eq("freelancer_id", freelancerId);
     if (error) {
         console.error(
             "Error occurred in getAllProjectsForFreelancer function",
-            error.message,
+            error.message
         );
         throw new Error(error.message);
     }
     return data as unknown as FreelancerProjectsFromBackendType[];
 }
 
-export async function createProject(
-    projectData: CreateProjectType,
-): Promise<string> {
+export async function createProject(projectData: CreateProjectType): Promise<string> {
     console.log("createProject() called");
 
     const { data, error } = await supabaseClient
@@ -64,10 +60,7 @@ export async function createProject(
         .single();
 
     if (error) {
-        console.error(
-            "Error occurred in createProject function",
-            error.message,
-        );
+        console.error("Error occurred in createProject function", error.message);
         throw new Error(error.message);
     }
 
@@ -75,22 +68,19 @@ export async function createProject(
 }
 
 export async function getProjectById(
-    projectId: string,
+    projectId: string
 ): Promise<ProjectDetailsTypeFromBackend> {
     console.log("getProjectById() called");
 
     const { data, error } = await supabaseClient
         .from("projects")
         .select(
-            "*, project_freelancers_join_table(freelancers(id, username, profile_pic, skills, description, role))",
+            "*, project_freelancers_join_table(freelancers(id, username, profile_pic, skills, description, role))"
         )
         .eq("project_id", projectId);
 
     if (error) {
-        console.error(
-            "Error occurred in getProjectById function",
-            error.message,
-        );
+        console.error("Error occurred in getProjectById function", error.message);
         throw new Error(error.message);
     }
 
@@ -108,21 +98,18 @@ export async function addFreelancerToProject({
     freelancerId: string;
     invitationId: string;
 }): Promise<void> {
-    const { error } = await supabaseClient
-        .from("project_freelancers_join_table")
-        .insert([
-            {
-                freelancer_id: freelancerId,
-                client_id: clientId,
-                project_id: projectId,
-            },
-        ]);
+    console.log("addFreelancerToProject() called");
+
+    const { error } = await supabaseClient.from("project_freelancers_join_table").insert([
+        {
+            freelancer_id: freelancerId,
+            client_id: clientId,
+            project_id: projectId,
+        },
+    ]);
 
     if (error) {
-        console.error(
-            "Error occurred in addFreelancerToProject function",
-            error.message,
-        );
+        console.error("Error occurred in addFreelancerToProject function", error.message);
         throw new Error(error.message);
     }
 
@@ -133,3 +120,5 @@ export async function addFreelancerToProject({
         throw new Error("Something went wrong, cannot delete invitation");
     }
 }
+
+export async function getClientAndFreelancersDataForProject(projectId: string) {}

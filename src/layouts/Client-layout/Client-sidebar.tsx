@@ -135,30 +135,6 @@ export default function ClientSidebar() {
                                                     )}
                                                 </Link>
                                             )}
-                                            {/*<Link
-                                                to={item.url}
-                                                onClick={() => {
-                                                    if (isMobile)
-                                                        toggleSidebar();
-                                                }}
-                                            >
-                                                <item.icon />
-                                                <span>
-                                                    {item.title}{" "}
-                                                    {item.title ===
-                                                        "Messages" &&
-                                                        unreadChatsIds.length >
-                                                            0 && (
-                                                            <span className="font-bold">
-                                                                (
-                                                                {
-                                                                    unreadChatsIds.length
-                                                                }
-                                                                )
-                                                            </span>
-                                                        )}
-                                                </span>
-                                            </Link>*/}
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 ))}

@@ -68,7 +68,7 @@ const ChatPage = () => {
 
     return (
         <div>
-            <h1 className="text-3xl font-semibold h-[70px] justify-center border-b flex items-center">
+            <h1 className="text-3xl font-semibold h-[70px] px-4 justify-center md:justify-start border-b flex items-center">
                 Chats
             </h1>
 
