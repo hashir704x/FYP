@@ -73,8 +73,8 @@ const ClientProfileFreelancerPage = lazy(
 );
 
 // common pages
-const ChatPage = lazy(() => import("@/pages/chat/Chat-page"));
-const ProjectChatsPage = lazy(() => import("@/pages/chat/Project-chat-page"));
+const ChatPage = lazy(() => import("@/pages/Chat/Chat-page"));
+const ProjectChatsPage = lazy(() => import("@/pages/Chat/Project-chat-page"));
 
 const router = createBrowserRouter([
     {

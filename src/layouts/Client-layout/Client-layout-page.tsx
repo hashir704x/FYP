@@ -2,7 +2,7 @@ import { userAuthStore } from "@/store/user-auth-store";
 import { Navigate, Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import ClientSidebar from "@/layouts/Client-layout/Client-sidebar";
-import ChatGlobalListener from "@/pages/chat/Chat-global-listener";
+import ChatGlobalListener from "@/pages/Chat/Chat-global-listener";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const ClientLayoutPage = () => {
