@@ -4,8 +4,11 @@ import ProjectDetailsInfoSection from "@/components/Project-details-info-section
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { userAuthStore } from "@/store/user-auth-store";
+import type { UserType } from "@/Types";
 
 const ProjectDetailsFreelancerPage = () => {
+    const user = userAuthStore((state) => state.user) as UserType;
     const [activeOption, setActiveOption] = useState<
         "info" | "freelancers" | "milestones"
     >("info");
@@ -55,9 +58,7 @@ const ProjectDetailsFreelancerPage = () => {
                                 </button>
 
                                 <button
-                                    onClick={() =>
-                                        setActiveOption("milestones")
-                                    }
+                                    onClick={() => setActiveOption("milestones")}
                                     className={`${
                                         activeOption === "milestones" &&
                                         "bg-[var(--my-blue)] text-white"
@@ -71,14 +72,11 @@ const ProjectDetailsFreelancerPage = () => {
                         <div className="flex flex-wrap items-center gap-6 text-gray-600 text-sm">
                             <span className="flex items-center gap-1">
                                 <span className="text-gray-400">📅</span>
-                                {new Date(data.created_at).toLocaleDateString(
-                                    "en-GB",
-                                    {
-                                        day: "numeric",
-                                        month: "long",
-                                        year: "numeric",
-                                    },
-                                )}
+                                {new Date(data.created_at).toLocaleDateString("en-GB", {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric",
+                                })}
                             </span>
 
                             <span className="flex items-center gap-1">
@@ -99,6 +97,7 @@ const ProjectDetailsFreelancerPage = () => {
                         <ProjectDetailsInfoSection
                             projectData={data}
                             setActiveOption={setActiveOption}
+                            user={user}
                         />
                     )}
                 </div>

@@ -1,6 +1,7 @@
 import type { InvitationsForFreelancerFromBackendType } from "@/Types";
 import { CalendarDays, User } from "lucide-react";
 import FreelancerConfirmInvitationDialog from "./Freelancer-confirm-invitation-dialog";
+import { Link } from "react-router-dom";
 
 const FreelancerInvitationCard = (props: InvitationsForFreelancerFromBackendType) => {
     return (
@@ -33,10 +34,13 @@ const FreelancerInvitationCard = (props: InvitationsForFreelancerFromBackendType
                 />
 
                 <div>
-                    <p className="text-gray-800 font-medium flex items-center justify-center md:justify-end gap-2 text-sm sm:text-base">
+                    <Link
+                        to={`/freelancer/client-profile/${props.client_id}`}
+                        className="text-gray-800 font-medium flex items-center justify-center md:justify-end gap-2 text-sm sm:text-base hover:underline"
+                    >
                         <User className="w-4 h-4 text-gray-500" />
                         {props.clients.username}
-                    </p>
+                    </Link>
                 </div>
 
                 <div className="flex items-center justify-center md:justify-end gap-2 text-gray-400 text-xs sm:text-sm">
@@ -45,7 +49,6 @@ const FreelancerInvitationCard = (props: InvitationsForFreelancerFromBackendType
                 </div>
 
                 <div className="flex flex-wrap justify-center md:justify-end gap-3 pt-2">
-                   
                     <FreelancerConfirmInvitationDialog
                         action="accept"
                         freelancerId={props.freelancer_id}

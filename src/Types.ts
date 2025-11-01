@@ -32,7 +32,7 @@ export type CreateProjectType = {
     client_id: string;
 };
 
-export type ClientProfileFromBackendType = {
+export type ClientOwnDataFromBackendType = {
     id: string;
     username: string;
     email: string;
@@ -40,6 +40,13 @@ export type ClientProfileFromBackendType = {
     profile_pic: string;
     wallet_amount: number;
     created_at: string;
+};
+
+export type ClientFromBackendType = {
+    id: string;
+    username: string;
+    role: string;
+    profile_pic: string;
 };
 
 export type FreelancerFromBackendType = {
@@ -91,6 +98,13 @@ export type ProjectDetailsTypeFromBackend = {
     client_id: string;
     created_at: string;
     required_skills: string[];
+
+    clients: {
+        id: string;
+        username: string;
+        profile_pic: string;
+        role: string;
+    };
 
     project_freelancers_join_table: {
         freelancers: {

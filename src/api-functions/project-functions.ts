@@ -75,16 +75,19 @@ export async function getProjectById(
     const { data, error } = await supabaseClient
         .from("projects")
         .select(
-            "*, project_freelancers_join_table(freelancers(id, username, profile_pic, skills, description, role))"
+            "*, clients(id, username, profile_pic, role), project_freelancers_join_table(freelancers(id, username, profile_pic, skills, description, role))"
         )
-        .eq("project_id", projectId);
+        .eq("project_id", projectId)
+        .single();
 
     if (error) {
         console.error("Error occurred in getProjectById function", error.message);
         throw new Error(error.message);
     }
 
-    return data[0];
+    console.log("project data:", data);
+
+    return data;
 }
 
 export async function addFreelancerToProject({
@@ -121,4 +124,6 @@ export async function addFreelancerToProject({
     }
 }
 
-export async function getClientAndFreelancersDataForProject(projectId: string) {}
+// export async function getClientAndFreelancersDataForProject(projectId: string) {
+
+// }

@@ -1,20 +1,39 @@
 import { supabaseClient } from "@/Supabase-client";
-import type { ClientProfileFromBackendType } from "@/Types";
+import type { ClientFromBackendType, ClientOwnDataFromBackendType } from "@/Types";
 
-export async function getClientProfileData(
+export async function getClientOwnDataById(
     clientId: string
-): Promise<ClientProfileFromBackendType> {
-    console.log("getClientProfileData() called");
+): Promise<ClientOwnDataFromBackendType> {
+    console.log("getClientOwnDataById() called");
 
     const { data, error } = await supabaseClient
         .from("clients")
         .select("*")
-        .eq("id", clientId).single();
+        .eq("id", clientId)
+        .single();
 
     if (error) {
-        console.error("Error occurred in getClientProfileData function", error.message);
+        console.error("Error occurred in getClientOwnDataById function", error.message);
         throw new Error(error.message);
     }
+    return data;
+}
+
+export async function getClientDataById(
+    clientId: string
+): Promise<ClientFromBackendType> {
+    console.log("getClientDataById() called");
+
+    const { data, error } = await supabaseClient
+        .from("clients")
+        .select("id, username, profile_pic, role")
+        .eq("id", clientId)
+        .single();
+    if (error) {
+        console.error("Error occurred in getClientDataById function", error.message);
+        throw new Error(error.message);
+    }
+
     return data;
 }
 

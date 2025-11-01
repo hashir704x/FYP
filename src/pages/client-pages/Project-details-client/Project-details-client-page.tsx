@@ -116,6 +116,7 @@ const ProjectDetailsClientPage = () => {
                         <ProjectDetailsInfoSection
                             projectData={data}
                             setActiveOption={setActiveOption}
+                            user={user}
                         />
                     )}
 

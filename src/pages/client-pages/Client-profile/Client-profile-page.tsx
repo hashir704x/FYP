@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-    getClientProfileData,
+    getClientOwnDataById,
     updateClientProfileImage,
 } from "@/api-functions/client-functions";
 import { Spinner } from "@/components/ui/spinner";
@@ -18,7 +18,7 @@ const ClientProfilePage = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const { data, isLoading, isError } = useQuery({
-        queryFn: () => getClientProfileData(user.userId),
+        queryFn: () => getClientOwnDataById(user.userId),
         queryKey: ["get-client-profile-data"],
     });
 
