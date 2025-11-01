@@ -19,7 +19,7 @@ const ClientProfilePage = () => {
 
     const { data, isLoading, isError } = useQuery({
         queryFn: () => getClientOwnDataById(user.userId),
-        queryKey: ["get-client-profile-data"],
+        queryKey: ["get-client-profile-own-data"],
     });
 
     const { mutate, isPending } = useMutation({

@@ -3,9 +3,11 @@ import { Spinner } from "@/components/ui/spinner";
 import ProjectDetailsInfoSection from "@/components/Project-details-info-section";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { userAuthStore } from "@/store/user-auth-store";
 import type { UserType } from "@/Types";
+import { Button } from "@/components/ui/button";
+import { MessageCircleMore } from "lucide-react";
 
 const ProjectDetailsFreelancerPage = () => {
     const user = userAuthStore((state) => state.user) as UserType;
@@ -91,6 +93,15 @@ const ProjectDetailsFreelancerPage = () => {
                                 {data.required_skills.length} skills required
                             </span>
                         </div>
+                        <Link
+                            to={`/${
+                                user.role === "client" ? "client" : "freelancer"
+                            }/project-chat/${projectId}`}
+                        >
+                            <Button variant="custom" className="mt-5">
+                                <MessageCircleMore /> Open Chat
+                            </Button>
+                        </Link>
                     </div>
 
                     {activeOption === "info" && (

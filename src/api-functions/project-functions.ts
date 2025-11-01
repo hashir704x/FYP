@@ -84,9 +84,6 @@ export async function getProjectById(
         console.error("Error occurred in getProjectById function", error.message);
         throw new Error(error.message);
     }
-
-    console.log("project data:", data);
-
     return data;
 }
 

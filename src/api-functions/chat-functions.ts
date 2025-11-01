@@ -161,3 +161,25 @@ export async function getMessagesForProject(
 
     return data;
 }
+
+export async function sendProjectChatMessage(
+    projectId: string,
+    senderId: string,
+    senderUsername: string,
+    messageText: string
+): Promise<void> {
+    console.log("sendProjectChatMessage() called");
+    const { error } = await supabaseClient.from("project_messages").insert([
+        {
+            project_id: projectId,
+            sender_id: senderId,
+            sender_username: senderUsername,
+            message_text: messageText,
+        },
+    ]);
+
+    if (error) {
+        console.error("Error occurred in sendProjectChatMessage function", error.message);
+        throw new Error(error.message);
+    }
+}
