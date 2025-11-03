@@ -1,20 +1,21 @@
 import { getChatsForUser } from "@/api-functions/chat-functions";
 import { Spinner } from "@/components/ui/spinner";
 import { userAuthStore } from "@/store/user-auth-store";
-import { type UserType } from "@/Types";
+import { type ChatFromBackendType, type UserType } from "@/Types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ChatListDesktop from "./Chat-list-desktop";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabaseClient } from "@/Supabase-client";
 import ChatWindow from "./Chat-window";
 import { MessageSquare } from "lucide-react";
-import { chatsStore } from "@/store/chats-store";
+// import { chatsStore } from "@/store/chats-store";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSearchParams } from "react-router-dom";
 
 const ChatPage = () => {
+    const [searchParams] = useSearchParams();
+    const [activeChat, setActiveChat] = useState<null | ChatFromBackendType>(null);
     const user = userAuthStore((state) => state.user) as UserType;
-    const activeChat = chatsStore((state) => state.activeChat);
-    const setActiveChat = chatsStore((state) => state.setActiveChat);
     const isMobile = useIsMobile();
 
     const queryClient = useQueryClient();
@@ -31,6 +32,15 @@ const ChatPage = () => {
             }),
         queryKey: ["get-chats-data", user.userId],
     });
+
+    useEffect(() => {
+        console.log("search use Effect")
+        const chatId = searchParams.get("chatId");
+        if (chatId) {
+            const targetChat = chats?.find((item) => item.id === chatId);
+            if (targetChat) setActiveChat(targetChat);
+        }
+    }, [chats]);
 
     useEffect(() => {
         console.log("Subscribing chats channel");
@@ -51,7 +61,7 @@ const ChatPage = () => {
                     queryClient.invalidateQueries({
                         queryKey: ["get-chats-data", user.userId],
                     });
-                },
+                }
             )
             .subscribe();
 
@@ -84,9 +94,7 @@ const ChatPage = () => {
                 </div>
             )}
 
-            {chats && chats.length === 0 && (
-                <div>You have no chats right now</div>
-            )}
+            {chats && chats.length === 0 && <div>You have no chats right now</div>}
 
             {chats && chats.length >= 1 && (
                 <div>
@@ -94,7 +102,11 @@ const ChatPage = () => {
                         <div className="h-[calc(100vh-70px)]">
                             {!activeChat ? (
                                 <div className="h-full ">
-                                    <ChatListDesktop chats={chats} />
+                                    <ChatListDesktop
+                                        chats={chats}
+                                        activeChat={activeChat}
+                                        setActiveChat={setActiveChat}
+                                    />
                                 </div>
                             ) : (
                                 <div className="h-full">
@@ -102,6 +114,7 @@ const ChatPage = () => {
                                         key={activeChat.id}
                                         userId={user.userId}
                                         userRole={user.role}
+                                        activeChat={activeChat}
                                     />
                                 </div>
                             )}
@@ -109,13 +122,18 @@ const ChatPage = () => {
                     ) : (
                         <div className="h-[calc(100vh-70px)] flex">
                             <div className="w-72 h-full">
-                                <ChatListDesktop chats={chats} />
+                                <ChatListDesktop
+                                    chats={chats}
+                                    activeChat={activeChat}
+                                    setActiveChat={setActiveChat}
+                                />
                             </div>
                             {activeChat ? (
                                 <ChatWindow
                                     key={activeChat.id}
                                     userId={user.userId}
                                     userRole={user.role}
+                                    activeChat={activeChat}
                                 />
                             ) : (
                                 <div className="flex-1 flex flex-col items-center justify-center text-center bg-gray-50">
@@ -139,57 +157,6 @@ const ChatPage = () => {
                             )}
                         </div>
                     )}
-                    {/*Desktop view*/}
-                    {/*<div className="h-[calc(100vh-70px)] md:flex hidden">
-                        <div className="w-72 h-full">
-                            <ChatListDesktop chats={chats} />
-                        </div>
-                        {activeChat ? (
-                            // <ChatWindow
-                            //     key={activeChat.id}
-                            //     userId={user.userId}
-                            //     userRole={user.role}
-                            // />
-                            //
-                            <div></div>
-                        ) : (
-                            <div className="flex-1 flex flex-col items-center justify-center text-center bg-gray-50">
-                                <div className="flex flex-col items-center space-y-4 max-w-sm px-6">
-                                    <div className="p-6 bg-blue-100 rounded-full">
-                                        <MessageSquare className="w-10 h-10 text-blue-600" />
-                                    </div>
-
-                                    <h2 className="text-2xl font-semibold text-gray-700">
-                                        No chat selected
-                                    </h2>
-
-                                    <p className="text-gray-500 text-sm leading-relaxed">
-                                        Select a chat from the list to start
-                                        messaging.
-                                        <br />
-                                        Your conversations will appear here.
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-                    </div>*/}
-
-                    {/*Mobile view*/}
-                    {/*<div className="md:hidden h-[calc(100vh-70px)]">
-                        {!activeChat ? (
-                            <div className="h-full ">
-                                <ChatListDesktop chats={chats} />
-                            </div>
-                        ) : (
-                            <div className="h-full">
-                                <ChatWindow
-                                    key={activeChat.id}
-                                    userId={user.userId}
-                                    userRole={user.role}
-                                />
-                            </div>
-                        )}
-                    </div>*/}
                 </div>
             )}
         </div>

@@ -5,7 +5,7 @@ import {
 } from "@/api-functions/chat-functions";
 import type { ProjectMessageFromBackendType, UserType } from "@/Types";
 import { Spinner } from "@/components/ui/spinner";
-import type { RealtimeChannel } from "@supabase/supabase-js";
+
 import { MessageSquare, Send } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -35,30 +35,11 @@ const ProjectChatPage = () => {
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        let channel: RealtimeChannel;
         (async function () {
             try {
                 setIsLoading(true);
                 const messagesData = await getMessagesForProject(projectId as string);
                 setMessages(messagesData);
-
-                channel = supabaseClient
-                    .channel(`project_chat_${projectId}`)
-                    .on(
-                        "postgres_changes",
-                        {
-                            event: "INSERT",
-                            schema: "public",
-                            table: "project_messages",
-                            filter: `project_id=eq.${projectId}`,
-                        },
-                        (payload) => {
-                            const newMessage =
-                                payload.new as ProjectMessageFromBackendType;
-                            setMessages((prev) => [...prev, newMessage]);
-                        }
-                    )
-                    .subscribe();
             } catch (error) {
                 console.error(error);
                 setIsError(true);
@@ -67,8 +48,31 @@ const ProjectChatPage = () => {
             }
         })();
 
+        console.log("Subscribing channel");
+
+        const channel = supabaseClient
+            .channel(`project_chat_${projectId}`)
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "project_messages",
+                    filter: `project_id=eq.${projectId}`,
+                },
+                (payload) => {
+                    const newMessage = payload.new as ProjectMessageFromBackendType;
+                    console.log("new message in project:", newMessage);
+                    setMessages((prev) => [...prev, newMessage]);
+                }
+            )
+            .subscribe();
+
         return () => {
-            if (channel) supabaseClient.removeChannel(channel);
+            if (channel) {
+                console.log("Unsubscribing channel");
+                supabaseClient.removeChannel(channel);
+            }
         };
     }, []);
 
@@ -109,7 +113,6 @@ const ProjectChatPage = () => {
                     Project Chat
                 </h1>
 
-                {/* Scrollable messages area */}
                 <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3 ">
                     {isLoading ? (
                         <div className="flex justify-center items-center h-[90%]">
@@ -164,7 +167,6 @@ const ProjectChatPage = () => {
                     <div ref={bottomRef} />
                 </div>
 
-                {/* Input Bar */}
                 <div className="flex-none border-t border-gray-200 p-3 bg-gray-50">
                     <div className="flex items-center gap-2">
                         <input

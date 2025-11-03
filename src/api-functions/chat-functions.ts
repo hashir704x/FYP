@@ -75,7 +75,7 @@ export async function createChatAndInsertMessage({
         throw new Error(error.message);
     }
 
-    const { error: messageError } = await supabaseClient
+    const { error: messageError, data: messageResponse } = await supabaseClient
         .from("messages")
         .insert([
             {
@@ -86,7 +86,7 @@ export async function createChatAndInsertMessage({
                 sender_role: "client",
             },
         ])
-        .select()
+        .select("id")
         .single();
 
     if (messageError) {
@@ -96,6 +96,24 @@ export async function createChatAndInsertMessage({
         );
         throw new Error(messageError.message);
     }
+
+    const newMessageId = messageResponse.id;
+
+    const { error: chatUpdateError } = await supabaseClient
+        .from("chats")
+        .update({
+            latest_message_id: newMessageId,
+        })
+        .eq("id", data.id);
+
+    if (chatUpdateError) {
+        console.error(
+            "Error occurred in createChatAndInsertMessage function",
+            chatUpdateError.message
+        );
+        throw new Error(chatUpdateError.message);
+    }
+
     return data.id;
 }
 
@@ -127,19 +145,42 @@ export async function sendMessage(
 ): Promise<void> {
     console.log("sendMessage() called");
 
-    const { error } = await supabaseClient.from("messages").insert([
-        {
-            chat_id: chatId,
-            freelancer_id: freelancerId,
-            client_id: clientId,
-            sender_role: senderRole,
-            message_text: messageText,
-        },
-    ]);
+    const { error, data } = await supabaseClient
+        .from("messages")
+        .insert([
+            {
+                chat_id: chatId,
+                freelancer_id: freelancerId,
+                client_id: clientId,
+                sender_role: senderRole,
+                message_text: messageText,
+            },
+        ])
+        .select("id")
+        .single();
 
     if (error) {
         console.error("Error occurred in sendMessage function", error.message);
         throw new Error(error.message);
+    }
+
+    if (!data || !data.id) {
+        console.error(
+            "Error occurred in sendMessage function, inserted message data or id missing"
+        );
+        throw new Error("Inserted message data or id missing");
+    }
+
+    const { error: chatUpdateError } = await supabaseClient
+        .from("chats")
+        .update({
+            latest_message_id: data.id,
+        })
+        .eq("id", chatId);
+
+    if (chatUpdateError) {
+        console.error("Error occurred in sendMessage function", chatUpdateError.message);
+        throw new Error(chatUpdateError.message);
     }
 }
 
@@ -180,6 +221,34 @@ export async function sendProjectChatMessage(
 
     if (error) {
         console.error("Error occurred in sendProjectChatMessage function", error.message);
+        throw new Error(error.message);
+    }
+}
+
+export async function updateLastReadMessage(
+    chatId: string,
+    userRole: "client" | "freelancer",
+    lastMessageId: number
+): Promise<void> {
+    console.log(
+        "updateLastReadMessage() called with data:",
+        chatId,
+        userRole,
+        lastMessageId
+    );
+    const column =
+        userRole === "client"
+            ? "last_read_message_id_client"
+            : "last_read_message_id_freelancer";
+
+    const { error } = await supabaseClient
+        .from("chats")
+        .update({ [column]: lastMessageId })
+        .eq("id", chatId)
+        .select();
+
+    if (error) {
+        console.error("Error occurred in updateLastReadMessage function", error.message);
         throw new Error(error.message);
     }
 }

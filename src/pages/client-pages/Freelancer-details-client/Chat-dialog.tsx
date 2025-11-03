@@ -16,7 +16,6 @@ import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-// import { useNavigate } from "react-router-dom";
 
 type PropsType = {
     showChatsDialog: boolean;
@@ -27,14 +26,12 @@ type PropsType = {
 };
 
 export default function ChatsDialog(props: PropsType) {
-    // const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [message, setMessage] = useState("");
     const { mutate, isPending } = useMutation({
         mutationFn: createChatAndInsertMessage,
         onSuccess: (chatId) => {
             console.log("Chat created successfully", chatId);
-            // navigate(`/client/chats?${chatId}`);
             setMessage("");
             props.setShowChatsDialog(false);
             queryClient.invalidateQueries({

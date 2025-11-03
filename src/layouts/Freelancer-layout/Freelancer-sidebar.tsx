@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { userAuthStore } from "@/store/user-auth-store";
 import { supabaseClient } from "@/Supabase-client";
-import { chatsStore } from "@/store/chats-store";
+// import { chatsStore } from "@/store/chats-store";
 import { Link } from "react-router-dom";
 import {
     Sidebar,
@@ -60,15 +60,15 @@ export default function FreelancerSidebar() {
     const isMobile = useIsMobile();
     const { toggleSidebar } = useSidebar();
     const resetUser = userAuthStore((state) => state.reset);
-    const clearChatsData = chatsStore((state) => state.clearChatsData);
-    const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
-    const setActiveChat = chatsStore((state) => state.setActiveChat);
+    // const clearChatsData = chatsStore((state) => state.clearChatsData);
+    // const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
+    // const setActiveChat = chatsStore((state) => state.setActiveChat);
 
     const queryClient = useQueryClient();
 
     async function handleLogout() {
         resetUser();
-        clearChatsData();
+        // clearChatsData();
         await supabaseClient.auth.signOut();
         queryClient.clear();
     }
@@ -110,14 +110,14 @@ export default function FreelancerSidebar() {
                                                 <Link
                                                     to={item.url}
                                                     onClick={() => {
-                                                        setActiveChat(null);
+                                                        // setActiveChat(null);
                                                         if (isMobile)
                                                             toggleSidebar();
                                                     }}
                                                 >
                                                     <item.icon />
                                                     {item.title}
-                                                    {unreadChatsIds.length >
+                                                    {/* {unreadChatsIds.length >
                                                         0 && (
                                                         <span className="font-bold">
                                                             (
@@ -126,7 +126,7 @@ export default function FreelancerSidebar() {
                                                             }
                                                             )
                                                         </span>
-                                                    )}
+                                                    )} */}
                                                 </Link>
                                             )}
                                         </SidebarMenuButton>
