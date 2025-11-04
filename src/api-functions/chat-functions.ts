@@ -248,3 +248,29 @@ export async function updateLastReadMessage(
         throw new Error(error.message);
     }
 }
+
+export async function uploadChatMedia({ file, userId }: { file: File; userId: string }) {
+    console.log("uploadChatMedia() called");
+    
+    const fileName = `${Date.now()}_${userId}_${file.name}`;
+    const filePath = `chat-files/${fileName}`;
+
+    const { error } = await supabaseClient.storage
+        .from("project-media")
+        .upload(filePath, file, {
+            upsert: false,
+            cacheControl: "3600",
+        });
+
+    if (error) {
+        console.error("Error occurred in uploadChatMedia function", error.message);
+        throw new Error(error.message);
+    }
+
+    const { data: fileData } = supabaseClient.storage
+        .from("project-media")
+        .getPublicUrl(filePath);
+
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    return { url: fileData.publicUrl, fileType: ext || "file" };
+}

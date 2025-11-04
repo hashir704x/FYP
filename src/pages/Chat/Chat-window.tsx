@@ -4,8 +4,9 @@ import { getMessagesForChat, sendMessage } from "@/api-functions/chat-functions"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState, useRef } from "react";
-import { Send } from "lucide-react";
+import { Paperclip, Send } from "lucide-react";
 import { updateLastReadMessage } from "@/api-functions/chat-functions";
+import ShareFileDialog from "./Share-file-dialog";
 
 type PropsType = {
     userId: string;
@@ -14,6 +15,7 @@ type PropsType = {
 };
 
 const ChatWindow = (props: PropsType) => {
+    const [openShareFileDialog, setOpenShareFileDialog] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const [messages, setMessages] = useState<MessageFromBackendType[]>([]);
@@ -21,6 +23,8 @@ const ChatWindow = (props: PropsType) => {
     const [isError, setIsError] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const messagesRef = useRef<null | number>(null);
+
+    const [targetFile, setTargetFile] = useState<null | File>(null);
 
     const [sendingMessageLoading, setSendingMessageLoading] = useState(false);
 
@@ -82,6 +86,16 @@ const ChatWindow = (props: PropsType) => {
             })();
         };
     }, []);
+
+    function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+        if (!e.target.files || e.target.files.length === 0) return;
+
+        setTargetFile(e.target.files[0]);
+        setOpenShareFileDialog(true);
+        e.target.value = "";
+    }
+
+    console.log(openShareFileDialog);
 
     const handleSend = async () => {
         if (!inputValue.trim()) return;
@@ -188,6 +202,25 @@ const ChatWindow = (props: PropsType) => {
                     >
                         <Send size={18} />
                     </button>
+                    <label className="cursor-pointer p-2 rounded-xl hover:bg-gray-200 transition flex items-center justify-center">
+                        <Paperclip
+                            size={20}
+                            className="text-gray-600 hover:text-gray-800"
+                        />
+                        <input
+                            type="file"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                        />
+                        {targetFile && (
+                            <ShareFileDialog
+                                openShareFileDialog={openShareFileDialog}
+                                setOpenShareFileDialog={setOpenShareFileDialog}
+                                targetFile={targetFile}
+                                setTargetFile={setTargetFile}
+                            />
+                        )}
+                    </label>
                 </div>
             </div>
         </div>
