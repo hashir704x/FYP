@@ -84,8 +84,6 @@ const ChatListDesktop = ({ chats }: PropsType) => {
                     {chats.map((chat) => {
                         const isActive = activeChat?.id === chat.id;
                         const isUnread = unreadChatsIds.includes(chat.id);
-                   
-
 
                         const handleClick = () => {
                             setActiveChat(chat);
@@ -96,7 +94,7 @@ const ChatListDesktop = ({ chats }: PropsType) => {
                             <div
                                 key={chat.id}
                                 onClick={handleClick}
-                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer rounded-lg transition-colors border-b
+                                className={`flex items-center gap-3 px-4 py-3 cursor-pointer  transition-colors border-b
                                 ${
                                     isActive
                                         ? "bg-gray-200"

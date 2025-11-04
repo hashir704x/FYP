@@ -25,10 +25,9 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar";
 import { useQueryClient } from "@tanstack/react-query";
-// import { chatsStore } from "@/store/chats-store";
+import { chatsStore } from "@/store/chats-store";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-// Menu items.
 const items = [
     {
         title: "Dashboard",
@@ -66,15 +65,13 @@ export default function ClientSidebar() {
     const isMobile = useIsMobile();
     const { toggleSidebar } = useSidebar();
     const resetUser = userAuthStore((state) => state.reset);
-    // const clearChatsData = chatsStore((state) => state.clearChatsData);
-    // const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
-    // const setActiveChat = chatsStore((state) => state.setActiveChat);
-
+    const clearUnreadChatsIds = chatsStore((state) => state.clearUnreadChatsIds);
+    const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
     const queryClient = useQueryClient();
 
     async function handleLogout() {
         resetUser();
-        // clearChatsData();
+        clearUnreadChatsIds();
         await supabaseClient.auth.signOut();
         queryClient.clear();
     }
@@ -110,17 +107,16 @@ export default function ClientSidebar() {
                                                 <Link
                                                     to={item.url}
                                                     onClick={() => {
-                                                        // setActiveChat(null);
                                                         if (isMobile) toggleSidebar();
                                                     }}
                                                 >
                                                     <item.icon />
                                                     {item.title}
-                                                    {/* {unreadChatsIds.length > 0 && (
+                                                    {unreadChatsIds.length > 0 && (
                                                         <span className="font-bold">
                                                             ({unreadChatsIds.length})
                                                         </span>
-                                                    )} */}
+                                                    )}
                                                 </Link>
                                             )}
                                         </SidebarMenuButton>

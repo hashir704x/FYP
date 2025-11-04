@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { userAuthStore } from "@/store/user-auth-store";
 import { supabaseClient } from "@/Supabase-client";
-// import { chatsStore } from "@/store/chats-store";
+import { chatsStore } from "@/store/chats-store";
 import { Link } from "react-router-dom";
 import {
     Sidebar,
@@ -60,15 +60,14 @@ export default function FreelancerSidebar() {
     const isMobile = useIsMobile();
     const { toggleSidebar } = useSidebar();
     const resetUser = userAuthStore((state) => state.reset);
-    // const clearChatsData = chatsStore((state) => state.clearChatsData);
-    // const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
-    // const setActiveChat = chatsStore((state) => state.setActiveChat);
+    const clearUnreadChatsIds = chatsStore((state) => state.clearUnreadChatsIds);
+    const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
 
     const queryClient = useQueryClient();
 
     async function handleLogout() {
         resetUser();
-        // clearChatsData();
+        clearUnreadChatsIds();
         await supabaseClient.auth.signOut();
         queryClient.clear();
     }
@@ -78,13 +77,8 @@ export default function FreelancerSidebar() {
             <Sidebar className="border-none">
                 <SidebarHeader>
                     <div className="flex justify-between items-center">
-                        <span className="font-semibold text-xl">
-                            Freelansync
-                        </span>{" "}
-                        <CircleX
-                            className="md:hidden"
-                            onClick={toggleSidebar}
-                        />
+                        <span className="font-semibold text-xl">Freelansync</span>{" "}
+                        <CircleX className="md:hidden" onClick={toggleSidebar} />
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
@@ -99,8 +93,7 @@ export default function FreelancerSidebar() {
                                                 <Link
                                                     to={item.url}
                                                     onClick={() => {
-                                                        if (isMobile)
-                                                            toggleSidebar();
+                                                        if (isMobile) toggleSidebar();
                                                     }}
                                                 >
                                                     <item.icon />{" "}
@@ -110,23 +103,16 @@ export default function FreelancerSidebar() {
                                                 <Link
                                                     to={item.url}
                                                     onClick={() => {
-                                                        // setActiveChat(null);
-                                                        if (isMobile)
-                                                            toggleSidebar();
+                                                        if (isMobile) toggleSidebar();
                                                     }}
                                                 >
                                                     <item.icon />
                                                     {item.title}
-                                                    {/* {unreadChatsIds.length >
-                                                        0 && (
+                                                    {unreadChatsIds.length > 0 && (
                                                         <span className="font-bold">
-                                                            (
-                                                            {
-                                                                unreadChatsIds.length
-                                                            }
-                                                            )
+                                                            ({unreadChatsIds.length})
                                                         </span>
-                                                    )} */}
+                                                    )}
                                                 </Link>
                                             )}
                                         </SidebarMenuButton>
