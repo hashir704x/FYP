@@ -17,11 +17,14 @@ export type UserAuthStoreType = {
 };
 
 export type ChatsStoreType = {
+    chatsDataArray: ChatFromBackendType[];
+    setChatsDataArray: (chats: ChatFromBackendType[]) => void;
     activeChat: ChatFromBackendType | null;
-    unreadChatsIds: string[];
     setActiveChat: (chat: ChatFromBackendType | null) => void;
-    addUnreadChatId: (chatId: string) => void;
-    clearChatsData: () => void;
+    unreadChatsIds: string[];
+    addChatIdToUnreadChatsIds: (chatId: string) => void;
+    removeChatIdFromUnreadChatsIds: (chatId: string) => void;
+    clearUnreadChatsIds: () => void;
 };
 
 export type CreateProjectType = {
@@ -162,6 +165,9 @@ export type ChatFromBackendType = {
     created_at: string;
     freelancer_id: string;
     client_id: string;
+    last_read_message_id_client: number | null;
+    last_read_message_id_freelancer: number | null;
+    latest_message_id: number | null;
     userDetails?: {
         id: string;
         username: string;

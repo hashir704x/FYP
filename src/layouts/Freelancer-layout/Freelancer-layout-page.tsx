@@ -2,8 +2,8 @@ import { userAuthStore } from "@/store/user-auth-store";
 import { Navigate, Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import FreelancerSidebar from "@/layouts/Freelancer-layout/Freelancer-sidebar";
-// import ChatGlobalListener from "@/pages/Chat/Chat-global-listener";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import ChatsHandlerComponent from "@/components/Chats-handler-component";
 
 const FreelancerLayoutPage = () => {
     const user = userAuthStore((state) => state.user);
@@ -11,7 +11,7 @@ const FreelancerLayoutPage = () => {
     else if (user.role === "client") return <Navigate to="/client" />;
     return (
         <div>
-            {/* <ChatGlobalListener /> */}
+            <ChatsHandlerComponent />
             <SidebarProvider>
                 <FreelancerSidebar />
                 <div className="w-full relative">

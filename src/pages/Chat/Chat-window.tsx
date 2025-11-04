@@ -15,7 +15,9 @@ type PropsType = {
 
 const ChatWindow = (props: PropsType) => {
     const [isLoading, setIsLoading] = useState(false);
+
     const [messages, setMessages] = useState<MessageFromBackendType[]>([]);
+
     const [isError, setIsError] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const messagesRef = useRef<null | number>(null);
@@ -26,8 +28,6 @@ const ChatWindow = (props: PropsType) => {
 
     useEffect(() => {
         (async function () {
-            console.log("Subscribing chat window channel");
-
             try {
                 setIsLoading(true);
                 const messagesData = await getMessagesForChat(props.activeChat.id);

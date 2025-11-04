@@ -1,80 +1,66 @@
-import { getChatsForUser } from "@/api-functions/chat-functions";
-import { Spinner } from "@/components/ui/spinner";
+// import { getChatsForUser } from "@/api-functions/chat-functions";
+// import { Spinner } from "@/components/ui/spinner";
 import { userAuthStore } from "@/store/user-auth-store";
-import { type ChatFromBackendType, type UserType } from "@/Types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { type UserType } from "@/Types";
+// import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ChatListDesktop from "./Chat-list-desktop";
-import { useEffect, useState } from "react";
-import { supabaseClient } from "@/Supabase-client";
+// import { useEffect, useState } from "react";
 import ChatWindow from "./Chat-window";
 import { MessageSquare } from "lucide-react";
-// import { chatsStore } from "@/store/chats-store";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useSearchParams } from "react-router-dom";
+import { chatsStore } from "@/store/chats-store";
+import { useEffect } from "react";
+// import { useSearchParams } from "react-router-dom";
 
 const ChatPage = () => {
-    const [searchParams] = useSearchParams();
-    const [activeChat, setActiveChat] = useState<null | ChatFromBackendType>(null);
+    // const [searchParams] = useSearchParams();
+
     const user = userAuthStore((state) => state.user) as UserType;
     const isMobile = useIsMobile();
-
-    const queryClient = useQueryClient();
-    const {
-        data: chats,
-        isLoading,
-        isError,
-    } = useQuery({
-        queryFn: () =>
-            getChatsForUser({
-                userId: user.userId,
-                userRole: user.role,
-                getDetails: true,
-            }),
-        queryKey: ["get-chats-data", user.userId],
-    });
+    const chats = chatsStore((state) => state.chatsDataArray);
+    const activeChat = chatsStore((state) => state.activeChat);
+    const setActiveChat = chatsStore((state) => state.setActiveChat);
 
     useEffect(() => {
-        console.log("search use Effect")
-        const chatId = searchParams.get("chatId");
-        if (chatId) {
-            const targetChat = chats?.find((item) => item.id === chatId);
-            if (targetChat) setActiveChat(targetChat);
-        }
-    }, [chats]);
-
-    useEffect(() => {
-        console.log("Subscribing chats channel");
-        const column = user.role === "client" ? "client_id" : "freelancer_id";
-
-        const chatsChannel = supabaseClient
-            .channel("chats")
-            .on(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "chats",
-                    filter: `${column}=eq.${user.userId}`,
-                },
-                (payload) => {
-                    console.log("chats payload", payload);
-                    queryClient.invalidateQueries({
-                        queryKey: ["get-chats-data", user.userId],
-                    });
-                }
-            )
-            .subscribe();
-
         return function () {
-            console.log("Unsubscribing chats channel");
-            supabaseClient.removeChannel(chatsChannel);
-            queryClient.invalidateQueries({
-                queryKey: ["get-chats-data", user.userId],
-            });
-
             setActiveChat(null);
         };
     }, []);
+
+    console.log("chats:", chats);
+    // useEffect(() => {
+    //     console.log("Subscribing chats channel");
+    //     const column = user.role === "client" ? "client_id" : "freelancer_id";
+
+    //     const chatsChannel = supabaseClient
+    //         .channel("chats")
+    //         .on(
+    //             "postgres_changes",
+    //             {
+    //                 event: "INSERT",
+    //                 schema: "public",
+    //                 table: "chats",
+    //                 filter: `${column}=eq.${user.userId}`,
+    //             },
+    //             (payload) => {
+    //                 console.log("chats payload", payload);
+    //                 queryClient.invalidateQueries({
+    //                     queryKey: ["get-chats-data", user.userId],
+    //                 });
+    //             }
+    //         )
+    //         .subscribe();
+
+    //     return function () {
+    //         console.log("Unsubscribing chats channel");
+    //         supabaseClient.removeChannel(chatsChannel);
+    //         queryClient.invalidateQueries({
+    //             queryKey: ["get-chats-data", user.userId],
+    //         });
+
+    //         setActiveChat(null);
+    //     };
+    // }, []);
 
     return (
         <div>
@@ -82,19 +68,19 @@ const ChatPage = () => {
                 Chats
             </h1>
 
-            {isLoading && (
+            {/* {isLoading && (
                 <div className="h-[calc(100vh-100px)] flex justify-center items-center w-full">
                     <Spinner className="w-12 h-12 text-[var(--my-blue)]" />
                 </div>
-            )}
+            )} */}
 
-            {isError && (
+            {/* {isError && (
                 <div className="h-[calc(100vh-70px)] flex justify-center items-center w-full">
                     <p>Error in getting Chats data</p>
                 </div>
-            )}
+            )} */}
 
-            {chats && chats.length === 0 && <div>You have no chats right now</div>}
+            {chats.length === 0 && <div>You have no chats right now</div>}
 
             {chats && chats.length >= 1 && (
                 <div>
@@ -102,11 +88,7 @@ const ChatPage = () => {
                         <div className="h-[calc(100vh-70px)]">
                             {!activeChat ? (
                                 <div className="h-full ">
-                                    <ChatListDesktop
-                                        chats={chats}
-                                        activeChat={activeChat}
-                                        setActiveChat={setActiveChat}
-                                    />
+                                    <ChatListDesktop chats={chats} />
                                 </div>
                             ) : (
                                 <div className="h-full">
@@ -122,11 +104,7 @@ const ChatPage = () => {
                     ) : (
                         <div className="h-[calc(100vh-70px)] flex">
                             <div className="w-72 h-full">
-                                <ChatListDesktop
-                                    chats={chats}
-                                    activeChat={activeChat}
-                                    setActiveChat={setActiveChat}
-                                />
+                                <ChatListDesktop chats={chats} />
                             </div>
                             {activeChat ? (
                                 <ChatWindow

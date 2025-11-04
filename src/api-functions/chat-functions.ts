@@ -175,6 +175,7 @@ export async function sendMessage(
         .from("chats")
         .update({
             latest_message_id: data.id,
+            last_updated_by: senderRole === "client" ? clientId : freelancerId,
         })
         .eq("id", chatId);
 
@@ -230,12 +231,7 @@ export async function updateLastReadMessage(
     userRole: "client" | "freelancer",
     lastMessageId: number
 ): Promise<void> {
-    console.log(
-        "updateLastReadMessage() called with data:",
-        chatId,
-        userRole,
-        lastMessageId
-    );
+    console.log("updateLastReadMessage() called");
     const column =
         userRole === "client"
             ? "last_read_message_id_client"

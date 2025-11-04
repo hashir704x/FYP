@@ -29,10 +29,8 @@ const FreelancerDetailsClientPage = () => {
             const chatFound = data.find(
                 (chat) => chat.freelancer_id === freelancerId,
             );
-            console.log("chats", data);
             if (chatFound) navigate(`/client/chats?chatId=${chatFound.id}`);
             else {
-                console.log("pop up time");
                 setShowChatsDialog(true);
             }
         },

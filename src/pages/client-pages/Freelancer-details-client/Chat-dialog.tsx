@@ -10,7 +10,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { MessageCircle, SendHorizonal } from "lucide-react";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
@@ -26,7 +26,7 @@ type PropsType = {
 };
 
 export default function ChatsDialog(props: PropsType) {
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
     const [message, setMessage] = useState("");
     const { mutate, isPending } = useMutation({
         mutationFn: createChatAndInsertMessage,
@@ -34,10 +34,10 @@ export default function ChatsDialog(props: PropsType) {
             console.log("Chat created successfully", chatId);
             setMessage("");
             props.setShowChatsDialog(false);
-            queryClient.invalidateQueries({
-                queryKey: ["get-chats-for-user", props.clientId],
-            });
-            toast.success("Message sent! You can view the chat on the messages page");
+            // queryClient.invalidateQueries({
+            //     queryKey: ["get-chats-for-user", props.clientId],
+            // });
+            toast.success("Message sent! You can view the chat in messages page");
         },
         onError: (error) => {
             console.error("Error in creating chat and message", error.message);
