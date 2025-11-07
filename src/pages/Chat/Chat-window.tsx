@@ -1,22 +1,21 @@
 import { supabaseClient } from "@/Supabase-client";
-import type { ChatFromBackendType, MessageFromBackendType } from "@/Types";
+import type { ChatFromBackendType, MessageFromBackendType, UserType } from "@/Types";
 import { getMessagesForChat, sendMessage } from "@/api-functions/chat-functions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState, useRef } from "react";
-import { Paperclip, Send } from "lucide-react";
+import { Download, FileText, Paperclip, Send } from "lucide-react";
 import { updateLastReadMessage } from "@/api-functions/chat-functions";
 import ShareFileDialog from "./Share-file-dialog";
+import { userAuthStore } from "@/store/user-auth-store";
+import { chatsStore } from "@/store/chats-store";
+import ImageViewPopup from "./Image-view-popup";
 
-type PropsType = {
-    userId: string;
-    userRole: "client" | "freelancer";
-    activeChat: ChatFromBackendType;
-};
-
-const ChatWindow = (props: PropsType) => {
+const ChatWindow = () => {
     const [openShareFileDialog, setOpenShareFileDialog] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const user = userAuthStore((state) => state.user) as UserType;
+    const activeChat = chatsStore((state) => state.activeChat) as ChatFromBackendType;
 
     const [messages, setMessages] = useState<MessageFromBackendType[]>([]);
 
@@ -28,13 +27,16 @@ const ChatWindow = (props: PropsType) => {
 
     const [sendingMessageLoading, setSendingMessageLoading] = useState(false);
 
+    const [showImageView, setShowImageView] = useState(false);
+    const [imageViewUrl, setImageViewUrl] = useState<null | string>(null);
+
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         (async function () {
             try {
                 setIsLoading(true);
-                const messagesData = await getMessagesForChat(props.activeChat.id);
+                const messagesData = await getMessagesForChat(activeChat.id);
                 setMessages(messagesData);
             } catch (error) {
                 console.error(error);
@@ -45,14 +47,14 @@ const ChatWindow = (props: PropsType) => {
         })();
 
         const channel = supabaseClient
-            .channel(`chat_${props.activeChat.id}`)
+            .channel(`chat_${activeChat.id}`)
             .on(
                 "postgres_changes",
                 {
                     event: "INSERT",
                     schema: "public",
                     table: "messages",
-                    filter: `chat_id=eq.${props.activeChat.id}`,
+                    filter: `chat_id=eq.${activeChat.id}`,
                 },
                 (payload) => {
                     const newMessage = payload.new as MessageFromBackendType;
@@ -79,8 +81,8 @@ const ChatWindow = (props: PropsType) => {
             (async function () {
                 if (messagesRef.current)
                     await updateLastReadMessage(
-                        props.activeChat.id,
-                        props.userRole,
+                        activeChat.id,
+                        user.role,
                         messagesRef.current
                     );
             })();
@@ -95,28 +97,40 @@ const ChatWindow = (props: PropsType) => {
         e.target.value = "";
     }
 
-    console.log(openShareFileDialog);
-
     const handleSend = async () => {
         if (!inputValue.trim()) return;
         try {
-            if (props.activeChat) {
-                setSendingMessageLoading(true);
-                await sendMessage(
-                    props.activeChat.id,
-                    props.activeChat.freelancer_id,
-                    props.activeChat.client_id,
-                    props.userRole,
-                    inputValue.trim()
-                );
-                setInputValue("");
-            }
+            setSendingMessageLoading(true);
+            await sendMessage(
+                activeChat.id,
+                activeChat.freelancer_id,
+                activeChat.client_id,
+                user.role,
+                inputValue.trim()
+            );
+            setInputValue("");
         } catch (error) {
             console.error(error);
         } finally {
             setSendingMessageLoading(false);
         }
     };
+
+    function handleFileDownload(url: string, fileType: string) {
+        fetch(url)
+            .then((res) => res.blob())
+            .then((blob) => {
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = blobUrl;
+                a.download = `file.${fileType}`; // file name and extension
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(blobUrl);
+            })
+            .catch((err) => console.error("Download failed:", err));
+    }
 
     if (isError)
         return (
@@ -127,21 +141,21 @@ const ChatWindow = (props: PropsType) => {
 
     return (
         <div className="flex flex-col w-full h-full bg-white shadow-sm overflow-hidden">
-            {props.activeChat && props.activeChat.userDetails && (
+            {activeChat.userDetails && (
                 <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
                     <Avatar className="h-11 w-11 border">
                         <AvatarImage
-                            src={props.activeChat.userDetails?.profile_pic}
-                            alt={props.activeChat.userDetails.username}
+                            src={activeChat.userDetails.profile_pic}
+                            alt={activeChat.userDetails.username}
                             className="object-cover"
                         />
                         <AvatarFallback className="bg-gray-200 text-gray-600">
-                            {props.activeChat.userDetails.username?.[0]?.toUpperCase()}
+                            {activeChat.userDetails.username?.[0]?.toUpperCase()}
                         </AvatarFallback>
                     </Avatar>
 
                     <span className="font-semibold text-gray-900 text-lg">
-                        {props.activeChat.userDetails.username}
+                        {activeChat.userDetails.username}
                     </span>
                 </div>
             )}
@@ -155,26 +169,93 @@ const ChatWindow = (props: PropsType) => {
                     <div className="text-gray-400 text-center py-10">No messages yet</div>
                 ) : (
                     messages.map((item) => {
-                        const isSentByCurrentUser = props.userRole === item.sender_role;
+                        const isSentByCurrentUser = user.role === item.sender_role;
 
                         return (
                             <div
                                 key={item.id}
                                 className={`flex ${
                                     isSentByCurrentUser ? "justify-end" : "justify-start"
-                                }`}
+                                } mb-3`}
                             >
-                                <div
-                                    className={`max-w-[75%] sm:max-w-[70%] md:max-w-[60%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
-                                        isSentByCurrentUser
-                                            ? "bg-[var(--my-blue)] text-white rounded-tr-none"
-                                            : "bg-gray-200 text-gray-800 rounded-tl-none"
-                                    }`}
-                                >
-                                    <p className="whitespace-pre-wrap break-words">
-                                        {item.message_text}
-                                    </p>
-                                </div>
+                                {item.file_type ? (
+                                    <div>
+                                        {item.file_type.match(/(jpg|jpeg|png|webp)$/i) ? (
+                                            <img
+                                                src={item.message_text}
+                                                alt="shared file"
+                                                className={`rounded-xl border shadow-md w-[350px] cursor-pointer transition-transform hover:scale-105`}
+                                                onClick={() => {
+                                                    setImageViewUrl(item.message_text);
+                                                    setShowImageView(true);
+                                                }}
+                                            />
+                                        ) : (
+                                            <div
+                                                onClick={() =>
+                                                    handleFileDownload(
+                                                        item.message_text,
+                                                        item.file_type as string
+                                                    )
+                                                }
+                                                className={`group flex flex-col items-center justify-center gap-2 px-6 py-4 rounded-2xl shadow-sm transition-all
+                ${
+                    isSentByCurrentUser
+                        ? "bg-[var(--my-blue)] text-white hover:bg-[var(--my-blue-light)]"
+                        : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                }`}
+                                            >
+                                                {/* File & Download icons */}
+                                                <div className="flex items-center gap-3 text-3xl">
+                                                    <FileText
+                                                        size={28}
+                                                        className={`transition-transform group-hover:scale-110 ${
+                                                            isSentByCurrentUser
+                                                                ? "text-white"
+                                                                : "text-gray-700"
+                                                        }`}
+                                                    />
+                                                    <Download
+                                                        size={26}
+                                                        className={`transition-transform group-hover:scale-110 ${
+                                                            isSentByCurrentUser
+                                                                ? "text-white"
+                                                                : "text-gray-700"
+                                                        }`}
+                                                    />
+                                                </div>
+
+                                                {/* File type text */}
+                                                <span className="font-semibold text-sm capitalize">
+                                                    {item.file_type.toUpperCase()} File
+                                                </span>
+
+                                                {/* Subtext */}
+                                                <span
+                                                    className={`text-xs ${
+                                                        isSentByCurrentUser
+                                                            ? "text-white/80"
+                                                            : "text-gray-600"
+                                                    }`}
+                                                >
+                                                    Click to download
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div
+                                        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
+                                            isSentByCurrentUser
+                                                ? "bg-[var(--my-blue)] text-white rounded-tr-none"
+                                                : "bg-gray-200 text-gray-800 rounded-tl-none"
+                                        }`}
+                                    >
+                                        <p className="whitespace-pre-wrap break-words">
+                                            {item.message_text}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
                         );
                     })
@@ -184,6 +265,12 @@ const ChatWindow = (props: PropsType) => {
 
             <div className="border-t border-gray-200 p-3 bg-gray-50">
                 <div className="flex items-center gap-2">
+                    <ImageViewPopup
+                        imageViewUrl={imageViewUrl}
+                        setImageViewUrl={setImageViewUrl}
+                        setShowImageView={setShowImageView}
+                        showImageView={showImageView}
+                    />
                     <input
                         disabled={sendingMessageLoading}
                         type="text"

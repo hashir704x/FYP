@@ -183,6 +183,7 @@ export type MessageFromBackendType = {
     freelancer_id: string;
     message_text: string;
     sender_role: "freelancer" | "client";
+    file_type: string | null;
 };
 
 export type ProjectMessageFromBackendType = {

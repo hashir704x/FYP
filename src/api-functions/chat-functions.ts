@@ -249,9 +249,23 @@ export async function updateLastReadMessage(
     }
 }
 
-export async function uploadChatMedia({ file, userId }: { file: File; userId: string }) {
+export async function uploadChatMedia({
+    file,
+    userId,
+    chatId,
+    clientId,
+    freelancerId,
+    senderRole,
+}: {
+    file: File;
+    userId: string;
+    chatId: string;
+    freelancerId: string;
+    clientId: string;
+    senderRole: "client" | "freelancer";
+}) {
     console.log("uploadChatMedia() called");
-    
+
     const fileName = `${Date.now()}_${userId}_${file.name}`;
     const filePath = `chat-files/${fileName}`;
 
@@ -271,6 +285,24 @@ export async function uploadChatMedia({ file, userId }: { file: File; userId: st
         .from("project-media")
         .getPublicUrl(filePath);
 
-    const ext = file.name.split(".").pop()?.toLowerCase();
-    return { url: fileData.publicUrl, fileType: ext || "file" };
+    const ext = file.name.split(".").pop()?.toLowerCase() || "file";
+
+    const { error: messageError, data: messageData } = await supabaseClient
+        .from("messages")
+        .insert([
+            {
+                chat_id: chatId,
+                freelancer_id: freelancerId,
+                client_id: clientId,
+                sender_role: senderRole,
+                message_text: fileData.publicUrl,
+                file_type: ext,
+            },
+        ]);
+    if (messageError) {
+        console.error("Error occurred in uploadChatMedia function", messageError.message);
+        throw new Error(messageError.message);
+    }
+
+    console.log("message data:", messageData);
 }

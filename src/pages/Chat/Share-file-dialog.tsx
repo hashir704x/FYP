@@ -12,8 +12,8 @@ import {
 import { useMutation } from "@tanstack/react-query";
 
 import { userAuthStore } from "@/store/user-auth-store";
-import type { UserType } from "@/Types";
-// import { toast } from "sonner";
+import type { ChatFromBackendType, UserType } from "@/Types";
+import { toast } from "sonner";
 
 type PropsType = {
     openShareFileDialog: boolean;
@@ -22,17 +22,26 @@ type PropsType = {
     setTargetFile: React.Dispatch<React.SetStateAction<File | null>>;
 };
 
-// import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 import { uploadChatMedia } from "@/api-functions/chat-functions";
+import { chatsStore } from "@/store/chats-store";
+import { Button } from "@/components/ui/button";
 
 export default function ShareFileDialog(props: PropsType) {
     const user = userAuthStore((state) => state.user) as UserType;
+    const activeChat = chatsStore((state) => state.activeChat) as ChatFromBackendType;
 
     const { mutate, isPending } = useMutation({
         mutationFn: uploadChatMedia,
-        onSuccess: (data) => {
-            console.log("done", data);
+        onSuccess: () => {
+            console.log("done");
             props.setTargetFile(null);
+            props.setOpenShareFileDialog(false);
+            toast.success("File shared successfully!");
+        },
+        onError: (error) => {
+            console.error("Error in uploading file", error.message);
+            toast.error("Failed to upload file!");
         },
     });
 
@@ -49,19 +58,32 @@ export default function ShareFileDialog(props: PropsType) {
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
+                    <Button
+                        variant="secondary"
+                        onClick={() => {
+                            props.setTargetFile(null);
+                            props.setOpenShareFileDialog(false);
+                        }}
+                        disabled={isPending}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="custom"
                         disabled={isPending}
                         onClick={() =>
                             mutate({
                                 file: props.targetFile,
                                 userId: user.userId,
+                                chatId: activeChat.id,
+                                senderRole: user.role,
+                                freelancerId: activeChat.freelancer_id,
+                                clientId: activeChat.client_id,
                             })
                         }
-                        className="bg-[var(--my-blue)] hover:bg-[var(--my-blue-light)] cursor-pointer"
                     >
-                        Confirm
-                    </AlertDialogAction>
+                        {isPending && <Spinner />} Confirm
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

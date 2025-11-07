@@ -61,6 +61,8 @@ export default function FreelancerSidebar() {
     const { toggleSidebar } = useSidebar();
     const resetUser = userAuthStore((state) => state.reset);
     const clearUnreadChatsIds = chatsStore((state) => state.clearUnreadChatsIds);
+    const setActiveChat = chatsStore((state) => state.setActiveChat);
+
     const unreadChatsIds = chatsStore((state) => state.unreadChatsIds);
 
     const queryClient = useQueryClient();
@@ -103,7 +105,10 @@ export default function FreelancerSidebar() {
                                                 <Link
                                                     to={item.url}
                                                     onClick={() => {
-                                                        if (isMobile) toggleSidebar();
+                                                        if (isMobile) {
+                                                            toggleSidebar();
+                                                            setActiveChat(null);
+                                                        }
                                                     }}
                                                 >
                                                     <item.icon />
