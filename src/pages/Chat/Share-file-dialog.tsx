@@ -1,7 +1,5 @@
 import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -34,7 +32,6 @@ export default function ShareFileDialog(props: PropsType) {
     const { mutate, isPending } = useMutation({
         mutationFn: uploadChatMedia,
         onSuccess: () => {
-            console.log("done");
             props.setTargetFile(null);
             props.setOpenShareFileDialog(false);
             toast.success("File shared successfully!");
