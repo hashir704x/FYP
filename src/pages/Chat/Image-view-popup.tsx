@@ -20,6 +20,7 @@ const ImageViewPopup = ({
         setTimeout(() => setImageViewUrl(null), 300);
     };
 
+
     const handleDownload = async () => {
         try {
             const res = await fetch(imageViewUrl);
@@ -46,6 +47,7 @@ const ImageViewPopup = ({
             onClick={handleClose}
         >
             {/* ❌ Close Button */}
+
             <button
                 onClick={handleClose}
                 className="absolute top-4 right-4 text-white hover:text-gray-300 transition"

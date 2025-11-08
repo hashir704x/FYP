@@ -1,6 +1,13 @@
 import { supabaseClient } from "@/Supabase-client";
-import type { ChatFromBackendType, MessageFromBackendType, UserType } from "@/Types";
-import { getMessagesForChat, sendMessage } from "@/api-functions/chat-functions";
+import type {
+    ChatFromBackendType,
+    MessageFromBackendType,
+    UserType,
+} from "@/Types";
+import {
+    getMessagesForChat,
+    sendMessage,
+} from "@/api-functions/chat-functions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState, useRef } from "react";
@@ -15,7 +22,9 @@ const ChatWindow = () => {
     const [openShareFileDialog, setOpenShareFileDialog] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const user = userAuthStore((state) => state.user) as UserType;
-    const activeChat = chatsStore((state) => state.activeChat) as ChatFromBackendType;
+    const activeChat = chatsStore(
+        (state) => state.activeChat
+    ) as ChatFromBackendType;
 
     const [messages, setMessages] = useState<MessageFromBackendType[]>([]);
 
@@ -166,27 +175,36 @@ const ChatWindow = () => {
                         <Spinner className="text-[var(--my-blue)] w-8 h-8" />
                     </div>
                 ) : messages.length === 0 ? (
-                    <div className="text-gray-400 text-center py-10">No messages yet</div>
+                    <div className="text-gray-400 text-center py-10">
+                        No messages yet
+                    </div>
                 ) : (
                     messages.map((item) => {
-                        const isSentByCurrentUser = user.role === item.sender_role;
+                        const isSentByCurrentUser =
+                            user.role === item.sender_role;
 
                         return (
                             <div
                                 key={item.id}
                                 className={`flex ${
-                                    isSentByCurrentUser ? "justify-end" : "justify-start"
+                                    isSentByCurrentUser
+                                        ? "justify-end"
+                                        : "justify-start"
                                 } mb-3`}
                             >
                                 {item.file_type ? (
                                     <div>
-                                        {item.file_type.match(/(jpg|jpeg|png|webp)$/i) ? (
+                                        {item.file_type.match(
+                                            /(jpg|jpeg|png|webp)$/i
+                                        ) ? (
                                             <img
                                                 src={item.message_text}
                                                 alt="shared file"
                                                 className={`rounded-xl border shadow-md w-[350px] cursor-pointer transition-transform hover:scale-105`}
                                                 onClick={() => {
-                                                    setImageViewUrl(item.message_text);
+                                                    setImageViewUrl(
+                                                        item.message_text
+                                                    );
                                                     setShowImageView(true);
                                                 }}
                                             />
@@ -227,7 +245,8 @@ const ChatWindow = () => {
 
                                                 {/* File type text */}
                                                 <span className="font-semibold text-sm capitalize">
-                                                    {item.file_type.toUpperCase()} File
+                                                    {item.file_type.toUpperCase()}{" "}
+                                                    File
                                                 </span>
 
                                                 {/* Subtext */}
