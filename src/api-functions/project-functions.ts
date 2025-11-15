@@ -120,7 +120,3 @@ export async function addFreelancerToProject({
         throw new Error("Something went wrong, cannot delete invitation");
     }
 }
-
-// export async function getClientAndFreelancersDataForProject(projectId: string) {
-
-// }

@@ -63,7 +63,6 @@ export async function getInvitationsForProject(
             "id, created_at, project_id, freelancers(id, username, email, role, skills, profile_pic)",
         )
         .eq("project_id", projectId);
-
     if (error) {
         console.error("Error getting invitations for project:", error.message);
         throw new Error(error.message);

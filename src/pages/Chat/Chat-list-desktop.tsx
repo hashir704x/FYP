@@ -12,6 +12,7 @@ const ChatListDesktop = () => {
         (state) => state.removeChatIdFromUnreadChatsIds
     );
 
+    
     return (
         <div className="w-full h-full border-2 flex flex-col">
             <ScrollArea className="flex-1">

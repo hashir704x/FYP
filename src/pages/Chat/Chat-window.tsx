@@ -132,7 +132,7 @@ const ChatWindow = () => {
                 const blobUrl = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = blobUrl;
-                a.download = `file.${fileType}`; // file name and extension
+                a.download = `file.${fileType}`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -190,7 +190,7 @@ const ChatWindow = () => {
                                     isSentByCurrentUser
                                         ? "justify-end"
                                         : "justify-start"
-                                } mb-3`}
+                                } mb-5`}
                             >
                                 {item.file_type ? (
                                     <div>
@@ -264,7 +264,7 @@ const ChatWindow = () => {
                                     </div>
                                 ) : (
                                     <div
-                                        className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
+                                        className={`max-w-[50%] rounded-2xl px-4 py-3 text-sm shadow-sm ${
                                             isSentByCurrentUser
                                                 ? "bg-[var(--my-blue)] text-white rounded-tr-none"
                                                 : "bg-gray-200 text-gray-800 rounded-tl-none"
